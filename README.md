@@ -38,9 +38,9 @@ Engine moves the robot around.
 
 | Engine        | Capacity      | Moves per turn    |
 | ------------- |-------------- |-------------------|
-| Level 1       | 2             | 2                 |
-| Level 2       | 4             | 4                 |
-| Level 3       | 6             | 6                 |
+| engine1       | 2             | 2                 |
+| engine2       | 4             | 4                 |
+| engine3       | 6             | 6                 |
 
 Engine defines how many steps a robot can take in a turn. 
 
@@ -58,9 +58,9 @@ Radar is the "eyes of the robot".
 
 | Radar         | Capacity      | Scan area         |
 | ------------- |-------------- |-------------------|
-| Level 1       | 2             | 3x3               |
-| Level 2       | 4             | 6x6               |
-| Level 3       | 6             | 12x12             |
+| radar1        | 2             | 3x3               |
+| radar2        | 4             | 6x6               |
+| radar3        | 6             | 12x12             |
 
 With radar robot can scan it's surroundings. Radar scan area is a square. Scan result contains information about each cell:
 
@@ -69,15 +69,17 @@ With radar robot can scan it's surroundings. Radar scan area is a square. Scan r
 * Another robots
 * Area outsite the grid
 
+Radar scan can be done multiple times during a turn. You can scan, move the robot and then again.
+
 ### Shield
 
 With shields players can increase robot's health.
 
 | Shield         | Capacity      | Additional HP     |
 | ------------- |-------------- |-------------------|
-| Level 1       | 2             | +2                |
-| Level 2       | 4             | +4                |
-| Level 3       | 6             | +8                |
+| shield1       | 2             | +2                |
+| shield2       | 4             | +4                |
+| shield3       | 6             | +8                |
 
 ### Weapons
 
@@ -85,8 +87,8 @@ Currently two weapons are available: gun and cannon.
 
 | Weapon        | Capacity      | Range             | Strentgh       | Other                  |
 | ------------- |-------------- |-------------------|----------------|------------------------|
-| Gun           | 2             | 6x6               | -3 HP          |                        |
-| Cannon        | 4             | 3x3               | -6 HP          | Takes one turn to load |
+| gun           | 2             | 6x6               | -3 HP          |                        |
+| cannon        | 4             | 3x3               | -6 HP          | Takes one turn to load |
 
 Player can launch a weapon during robot's turn. Weapon is always targeted to given cell. 
 
