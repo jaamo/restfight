@@ -19,7 +19,12 @@ Available REST API endpoints.
 * [Add a feature to robot](#add-a-feature-to-robot)
 * [Finish deployment](#finish-deployment)
 * [Start turn](#start-turn)
+* [Radar scan](#radar-scan)
+* [Movement](#movement)
+* [Shoot](#shoot)
 * [End turn](#start-turn)
+
+
 
 
 
@@ -67,6 +72,9 @@ Join the game.
 |------------|------------------------------|
 | GAME_FULL  | No game available.           |
 | ERROR      | Generic error.               |
+
+
+
 
 
 - - - -
@@ -130,6 +138,7 @@ Robot object.
 
 
 
+
 - - - -
 
 ## Finish deployment
@@ -170,48 +179,6 @@ Robot object.
 | ERROR            | Generic error.               |
 
 
-
-
-- - - -
-
-## Finish deployment
-
-This enpoint is called when robot deployment is finished.
-
-**URL** : `/api/{GAME ID}/{PLAYER ID}/feature/end`
-
-**Method** : `GET`
-
-**Auth required** : NO
-
-### Success Response
-
-**Code** : `200 OK`
-
-**Content example**
-
-Robot object.
-
-### Error Response
-
-**Code** : `400 CLIENT ERROR`
-
-**Content** :
-
-```json
-{
-    "error": "ERROR",
-    "message": "Description."
-}
-```
-
-**Errors**
-
-| Key               | Reason                       |
-|-------------------|------------------------------|
-| ERROR             | Generic error.               |
-| PLAYER_NOT_EXISTS | Given player doesn't exists  |
-| GAME_NOT_EXISTS   | Given game doesn't exists    |
 
 
 
@@ -307,35 +274,23 @@ Starts turn. Should be called before any turn actions (movement, radar or weapon
 
 
 
+
 - - - -
 
 ## Radar scan
 
-Scan robots surroundings. Scanning middlepoint is always in robot's coordinates and the scanned area depends on radars's type.
+Scan robots surroundings. Scanning middlepoint is always in robot's coordinates and the scanned area depends on radars's type. This endpoint returns a list of coordinates and their contents. Content could be:
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/feature/add`
+* `empty`- empty cell
+* `enemy` - enemy
+* `obstable` - any obstacle, robot can't move to this cell
+* `outside`- outside game area
+
+**URL** : `/api/{GAME ID}/{PLAYER ID}/radar`
 
 **Method** : `POST`
 
 **Auth required** : NO
-
-**Data constraints**
-
-```json
-{
-    "feature": "[feature name: radar, shield, engine, weapon]",
-    "type": "[feature type]"
-}
-```
-
-**Data example**
-
-```json
-{
-    "username": "engine",
-    "password": "engine1"
-}
-```
 
 ### Success Response
 
@@ -343,7 +298,14 @@ Scan robots surroundings. Scanning middlepoint is always in robot's coordinates 
 
 **Content example**
 
-Robot object.
+```
+{
+    { "x": 1, "y": 1, "object": "empty" },
+    { "x": 2, "y": 1, "object": "enemy" },
+    { "x": 3, "y": 1, "object": "obstacle" },
+    ...
+}
+```
 
 ### Error Response
 
@@ -353,17 +315,143 @@ Robot object.
 
 ```json
 {
-    "error": "OUT_OF_CAPACITY",
+    "error": "ERROR",
     "message": "Description."
 }
 ```
 
 **Errors**
 
-| Key              | Reason                       |
-|------------------|------------------------------|
-| OUT_OF_CAPACITY  | Robot's capacity exceeded.   |
-| ERROR            | Generic error.               |
+| Key               | Reason                       |
+|-------------------|------------------------------|
+| ERROR             | Generic error.               |
+| NOT_YOUR_TURN     | Not your turn.               |
+| PLAYER_NOT_EXISTS | Given player doesn't exists  |
+| GAME_NOT_EXISTS   | Given game doesn't exists    |
+
+
+
+
+
+- - - -
+
+## Movement
+
+Move robot around. Robot can be move only one step up, down, left or right. Diagonal movement is not possible. If you want to move multiple steps you need to call this endpoint multiple times.
+
+**URL** : `/api/{GAME ID}/{PLAYER ID}/move`
+
+**Method** : `POST`
+
+**Auth required** : NO
+
+**Content example**
+
+```json
+{
+    "x": "[Number, coordinate]",
+    "x": "[Number, coordinate]",
+}
+```
+
+### Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```
+{
+    "moves_left": "[Number, amount of moves left]",
+    "robot": "[Object, robot object]"
+}
+```
+
+### Error Response
+
+**Code** : `400 CLIENT ERROR`
+
+**Content** :
+
+```json
+{
+    "error": "ERROR",
+    "message": "Description."
+}
+```
+
+**Errors**
+
+| Key               | Reason                                                         |
+|-------------------|----------------------------------------------------------------|
+| ERROR             | Generic error.                                                 |
+| OUT_OF_BOUNDS     | Out of bounds.                                                 |
+| ILLEGAL_MOVE      | Illegal move. Only one step up, down, left, right allowed.     |
+| NOT_YOUR_TURN     | Not your turn.                                                 |
+| PLAYER_NOT_EXISTS | Given player doesn't exists                                    |
+| GAME_NOT_EXISTS   | Given game doesn't exists                                      |
+
+
+
+
+
+- - - -
+
+## Shoot WIP
+
+Shoot weapon
+
+**URL** : `/api/{GAME ID}/{PLAYER ID}/move`
+
+**Method** : `POST`
+
+**Auth required** : NO
+
+**Content example**
+
+```json
+{
+    "x": "[Number, coordinate]",
+    "x": "[Number, coordinate]",
+}
+```
+
+### Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```
+{
+    "moves_left": "[Number, amount of moves left]",
+    "robot": "[Object, robot object]"
+}
+```
+
+### Error Response
+
+**Code** : `400 CLIENT ERROR`
+
+**Content** :
+
+```json
+{
+    "error": "ERROR",
+    "message": "Description."
+}
+```
+
+**Errors**
+
+| Key               | Reason                                                         |
+|-------------------|----------------------------------------------------------------|
+| ERROR             | Generic error.                                                 |
+| OUT_OF_BOUNDS     | Out of bounds.                                                 |
+| ILLEGAL_MOVE      | Illegal move. Only one step up, down, left, right allowed.     |
+| NOT_YOUR_TURN     | Not your turn.                                                 |
+| PLAYER_NOT_EXISTS | Given player doesn't exists                                    |
+| GAME_NOT_EXISTS   | Given game doesn't exists                                      |
 
 
 
