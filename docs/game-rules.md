@@ -67,7 +67,7 @@ Radar scan can be done multiple times during a turn. You can scan, move the robo
 
 With shields players can increase robot's health.
 
-| Shield         | Capacity      | Additional HP     |
+| Shield        | Capacity      | Additional HP     |
 | ------------- |-------------- |-------------------|
 | shield1       | 2             | +2                |
 | shield2       | 4             | +4                |
@@ -80,7 +80,7 @@ Currently two weapons are available: gun and cannon.
 | Weapon        | Capacity      | Range             | Strentgh       | Other                  |
 | ------------- |-------------- |-------------------|----------------|------------------------|
 | gun           | 2             | 6x6               | -3 HP          |                        |
-| cannon        | 4             | 3x3               | -6 HP          | Takes one turn to load |
+| cannon        | 4             | 3x3               | -8 HP          | Takes one turn to load |
 
 Player can launch a weapon during robot's turn. Weapon is always targeted to given cell. 
 

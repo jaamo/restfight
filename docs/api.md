@@ -350,7 +350,7 @@ Move robot around. Robot can be move only one step up, down, left or right. Diag
 ```json
 {
     "x": "[Number, coordinate]",
-    "x": "[Number, coordinate]",
+    "y": "[Number, coordinate]",
 }
 ```
 
@@ -397,11 +397,11 @@ Move robot around. Robot can be move only one step up, down, left or right. Diag
 
 - - - -
 
-## Shoot WIP
+## Shoot
 
-Shoot weapon
+Shoot to given coordinates. Gun can be launched on each turn. Cannon can be launched every second turn.
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/move`
+**URL** : `/api/{GAME ID}/{PLAYER ID}/shoot`
 
 **Method** : `POST`
 
@@ -412,22 +412,13 @@ Shoot weapon
 ```json
 {
     "x": "[Number, coordinate]",
-    "x": "[Number, coordinate]",
+    "y": "[Number, coordinate]",
 }
 ```
 
 ### Success Response
 
 **Code** : `200 OK`
-
-**Content example**
-
-```
-{
-    "moves_left": "[Number, amount of moves left]",
-    "robot": "[Object, robot object]"
-}
-```
 
 ### Error Response
 
@@ -444,14 +435,14 @@ Shoot weapon
 
 **Errors**
 
-| Key               | Reason                                                         |
-|-------------------|----------------------------------------------------------------|
-| ERROR             | Generic error.                                                 |
-| OUT_OF_BOUNDS     | Out of bounds.                                                 |
-| ILLEGAL_MOVE      | Illegal move. Only one step up, down, left, right allowed.     |
-| NOT_YOUR_TURN     | Not your turn.                                                 |
-| PLAYER_NOT_EXISTS | Given player doesn't exists                                    |
-| GAME_NOT_EXISTS   | Given game doesn't exists                                      |
+| Key                 | Reason                                                         |
+|---------------------|----------------------------------------------------------------|
+| ERROR               | Generic error.                                                 |
+| OUT_OF_BOUNDS       | Out of bounds.                                                 |
+| ILLEGAL_COORDINATES | Illegal move. Only one step up, down, left, right allowed.     |
+| NOT_YOUR_TURN       | Not your turn.                                                 |
+| PLAYER_NOT_EXISTS   | Given player doesn't exists                                    |
+| GAME_NOT_EXISTS     | Given game doesn't exists                                      |
 
 
 
