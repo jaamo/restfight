@@ -7,7 +7,7 @@ The game also offers a viewer app to follow the robot fight in real time.
 ## Available documentation
 
 * [Game rules](docs/game-rules.md)
-* [API documentation](docs/api.json)
+* [API documentation](docs/api.md)
 * [Server documentation](server/README.md)
 * [Client documentation](client/README.md)
 * [Example robot](docs/example-robot.md)
