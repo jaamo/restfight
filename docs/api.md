@@ -5,8 +5,10 @@ JSON schema for a robot. Used in various responses.
 
 ### Properties
 
-- player_id: 1 (string) - Player's id.
+- robot_id: 1 (string) - Player's id.
 - health: 10 (number) - Robot's health.
+- x: 10 (number) - X-position.
+- y: 10 (number) - Y-position.
 - max_health: 10 (string) - Robot's max health.
 - capacity: 2 (number) - Capacity used.
 - max_capacity: 10 (number) - Max capacity used.
@@ -49,7 +51,7 @@ Join the game.
 ```json
 {
     "game_id": "123456",
-    "user_id": "123456"
+    "robot_id": "123456"
 }
 ```
 
@@ -83,7 +85,7 @@ Join the game.
 
 Add a single feature (radar, shield, engine or weapon) to a robot. One feature type can be added only once. If feature already exists the existing will be deleted.
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/feature/add`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/feature/add`
 
 **Method** : `POST`
 
@@ -145,7 +147,7 @@ Robot object.
 
 This enpoint is called when robot deployment is finished.
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/feature/end`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/feature/end`
 
 **Method** : `GET`
 
@@ -188,7 +190,7 @@ Robot object.
 
 This endpoint returns a status of the game. This should be polled while waiting for own turn.
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/status`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/status`
 
 **Method** : `GET`
 
@@ -203,8 +205,8 @@ This endpoint returns a status of the game. This should be polled while waiting 
 ```json
 {
     "your_turn": 1,
-    "current_player_id": "[Current players id]",
-    "current_player_status": "[waiting, playing]"
+    "current_robot_id": "[Current robots id]",
+    "current_robot_status": "[waiting, playing]"
 }
 ```
 
@@ -226,7 +228,7 @@ This endpoint returns a status of the game. This should be polled while waiting 
 | Key               | Reason                       |
 |-------------------|------------------------------|
 | ERROR             | Generic error.               |
-| PLAYER_NOT_EXISTS | Given player doesn't exists  |
+| ROBOT_NOT_EXISTS | Given robot doesn't exists  |
 | GAME_NOT_EXISTS   | Given game doesn't exists    |
 
 
@@ -239,7 +241,7 @@ This endpoint returns a status of the game. This should be polled while waiting 
 
 Starts turn. Should be called before any turn actions (movement, radar or weapon).
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/turn/start`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/turn/start`
 
 **Method** : `GET`
 
@@ -268,7 +270,7 @@ Starts turn. Should be called before any turn actions (movement, radar or weapon
 |-------------------|------------------------------|
 | ERROR             | Generic error.               |
 | NOT_YOUR_TURN     | Not your turn.               |
-| PLAYER_NOT_EXISTS | Given player doesn't exists  |
+| ROBOT_NOT_EXISTS | Given robot doesn't exists  |
 | GAME_NOT_EXISTS   | Given game doesn't exists    |
 
 
@@ -286,7 +288,7 @@ Scan robots surroundings. Scanning middlepoint is always in robot's coordinates 
 * `obstable` - any obstacle, robot can't move to this cell
 * `outside`- outside game area
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/radar`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/radar`
 
 **Method** : `POST`
 
@@ -326,7 +328,7 @@ Scan robots surroundings. Scanning middlepoint is always in robot's coordinates 
 |-------------------|------------------------------|
 | ERROR             | Generic error.               |
 | NOT_YOUR_TURN     | Not your turn.               |
-| PLAYER_NOT_EXISTS | Given player doesn't exists  |
+| ROBOT_NOT_EXISTS | Given robot doesn't exists  |
 | GAME_NOT_EXISTS   | Given game doesn't exists    |
 
 
@@ -339,7 +341,7 @@ Scan robots surroundings. Scanning middlepoint is always in robot's coordinates 
 
 Move robot around. Robot can be move only one step up, down, left or right. Diagonal movement is not possible. If you want to move multiple steps you need to call this endpoint multiple times.
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/move`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/move`
 
 **Method** : `POST`
 
@@ -388,7 +390,7 @@ Move robot around. Robot can be move only one step up, down, left or right. Diag
 | OUT_OF_BOUNDS     | Out of bounds.                                                 |
 | ILLEGAL_MOVE      | Illegal move. Only one step up, down, left, right allowed.     |
 | NOT_YOUR_TURN     | Not your turn.                                                 |
-| PLAYER_NOT_EXISTS | Given player doesn't exists                                    |
+| ROBOT_NOT_EXISTS | Given robot doesn't exists                                    |
 | GAME_NOT_EXISTS   | Given game doesn't exists                                      |
 
 
@@ -401,7 +403,7 @@ Move robot around. Robot can be move only one step up, down, left or right. Diag
 
 Shoot to given coordinates. Gun can be launched on each turn. Cannon can be launched every second turn.
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/shoot`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/shoot`
 
 **Method** : `POST`
 
@@ -441,7 +443,7 @@ Shoot to given coordinates. Gun can be launched on each turn. Cannon can be laun
 | OUT_OF_BOUNDS       | Out of bounds.                                                 |
 | ILLEGAL_COORDINATES | Illegal move. Only one step up, down, left, right allowed.     |
 | NOT_YOUR_TURN       | Not your turn.                                                 |
-| PLAYER_NOT_EXISTS   | Given player doesn't exists                                    |
+| ROBOT_NOT_EXISTS   | Given robot doesn't exists                                    |
 | GAME_NOT_EXISTS     | Given game doesn't exists                                      |
 
 
@@ -454,7 +456,7 @@ Shoot to given coordinates. Gun can be launched on each turn. Cannon can be laun
 
 Ends robot's turn.
 
-**URL** : `/api/{GAME ID}/{PLAYER ID}/turn/end`
+**URL** : `/api/{GAME ID}/{ROBOT ID}/turn/end`
 
 **Method** : `GET`
 
@@ -483,6 +485,6 @@ Ends robot's turn.
 |-------------------|------------------------------|
 | ERROR             | Generic error.               |
 | NOT_YOUR_TURN     | Not your turn.               |
-| PLAYER_NOT_EXISTS | Given player doesn't exists  |
+| ROBOT_NOT_EXISTS | Given robot doesn't exists  |
 | GAME_NOT_EXISTS   | Given game doesn't exists    |
 
