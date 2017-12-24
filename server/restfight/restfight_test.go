@@ -59,12 +59,12 @@ func TestNewGameLimitRobots(t *testing.T) {
 
 	_, error := JoinGame()
 	if error != nil {
-		t.Errorf("Tried to add robot but got an error: %s.", error)
+		t.Errorf("Tried to add the first robot but got an error: %s.", error)
 	}
 
 	_, error = JoinGame()
 	if error != nil {
-		t.Errorf("Tried to add robot but got an error: %s.", error)
+		t.Errorf("Tried to add a second robot but got an error: %s.", error)
 	}
 
 	_, error = JoinGame()
@@ -81,66 +81,74 @@ func TestMoveRobot(t *testing.T) {
 	// Shoudn't be any robots at this point.
 	_, err := MoveRobot(0, 0, 0)
 	if err == nil || err.Error() != "ROBOT_NOT_FOUND" {
+		t.Errorf("Was expecting error ROBOT_NOT_FOUND on index 0, got %s", err)
+	}
+
+	_, err = MoveRobot(1, 0, 0)
+	if err == nil || err.Error() != "ROBOT_NOT_FOUND" {
 		t.Errorf("Was expecting error ROBOT_NOT_FOUND, got %s", err)
 	}
-	/*
-		_, err = MoveRobot(1, 0, 0)
-		if err != nil && err.Error() != "ROBOT_NOT_FOUND" {
-			t.Errorf("Was expecting error ROBOT_NOT_FOUND, got %s", err)
-		}
-		_, err = MoveRobot(2, 0, 0)
-		if err != nil && err.Error() != "ROBOT_INDEX_OUT_OF_BOUNDS" {
-			t.Errorf("Was expecting error ROBOT_INDEX_OUT_OF_BOUNDS, got %s", err)
-		}
+	_, err = MoveRobot(2, 0, 0)
+	if err == nil || err.Error() != "ROBOT_INDEX_OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error ROBOT_INDEX_OUT_OF_BOUNDS, got %s", err)
+	}
 
-		// Add robot. Should be only one.
-		JoinGame()
-		_, err = MoveRobot(1, 0, 0)
-		if err != nil && err.Error() != "ROBOT_NOT_FOUND" {
-			t.Errorf("Was expecting error ROBOT_NOT_FOUND, got %s", err)
-		}
+	// Add robot. Should be only one.
+	JoinGame()
+	_, err = MoveRobot(1, 0, 0)
+	if err == nil || err.Error() != "ROBOT_NOT_FOUND" {
+		t.Errorf("Was expecting error ROBOT_NOT_FOUND, got %s", err)
+	}
 
-		JoinGame()
+	JoinGame()
 
-		// Try some invalid moves.
-		_, err = MoveRobot(0, 2, 0)
-		if err != nil && err.Error() != "INVALID_MOVE" {
-			t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
-		}
-		_, err = MoveRobot(0, 0, 5)
-		if err != nil && err.Error() != "INVALID_MOVE" {
-			t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
-		}
-		_, err = MoveRobot(0, 8, 5)
-		if err != nil && err.Error() != "INVALID_MOVE" {
-			t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
-		}
-		_, err = MoveRobot(0, 1, 1)
-		if err != nil && err.Error() != "INVALID_MOVE" {
-			t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
-		}
+	// Try some invalid moves.
+	_, err = MoveRobot(0, 2, 0)
+	if err == nil || err.Error() != "INVALID_MOVE" {
+		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	}
+	_, err = MoveRobot(0, 0, 5)
+	if err == nil || err.Error() != "INVALID_MOVE" {
+		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	}
+	_, err = MoveRobot(0, 8, 5)
+	if err == nil || err.Error() != "INVALID_MOVE" {
+		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	}
+	_, err = MoveRobot(0, 1, 1)
+	if err == nil || err.Error() != "INVALID_MOVE" {
+		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	}
 
-		// Out of bounds.
-		_, err = MoveRobot(0, -1, 0)
-		if err != nil && err.Error() != "OUT_OF_BOUNDS" {
-			t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
-		}
-		_, err = MoveRobot(0, 0, -1)
-		if err != nil && err.Error() != "OUT_OF_BOUNDS" {
-			t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
-		}
-		_, err = MoveRobot(0, -1, -1)
-		if err != nil && err.Error() != "OUT_OF_BOUNDS" {
-			t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
-		}
+	// Out of bounds.
+	_, err = MoveRobot(0, -1, 0)
+	if err == nil || err.Error() != "OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
+	}
+	_, err = MoveRobot(0, 0, -1)
+	if err == nil || err.Error() != "OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
+	}
+	_, err = MoveRobot(0, -1, -1)
+	if err == nil || err.Error() != "OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
+	}
 
-		// Valid moves
-		var robot Robot
-		robot, err = MoveRobot(0, 0, 1)
-		if err == nil && robot.X == 0 && robot.Y == 1 {
-			t.Errorf("Move failed. Expected position %d x %d, got %d x %d", 0, 1, robot.X, robot.Y)
-		}
-	*/
+	// Valid moves
+	var robot *Robot
+	robot, err = MoveRobot(0, 0, 1)
+	if robot.X != 0 || robot.Y != 1 {
+		t.Errorf("Move failed. Expected position %d x %d, got %d x %d. Error %s", 0, 1, robot.X, robot.Y, err)
+	}
+
+	// Collision
+	forceMoveRobot(&robots[0], 0, 0)
+	forceMoveRobot(&robots[1], 0, 1)
+	GetStatus()
+	_, err = MoveRobot(0, 0, 1)
+	if err == nil || err.Error() != "INVALID_MOVE" {
+		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	}
 
 }
 func TestKeyGeneration(t *testing.T) {

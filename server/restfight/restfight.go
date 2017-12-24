@@ -6,6 +6,7 @@ package restfight
 import (
 	"errors"
 	"fmt"
+	"math"
 	"math/rand"
 	"strconv"
 )
@@ -17,8 +18,7 @@ const ArenaSize = 10
 var arena [ArenaSize][ArenaSize]Cell
 
 // Robots
-var robots [2]Robot
-var robotsInitialised = 0
+var robots []Robot
 
 // Status
 var status Status
@@ -41,7 +41,8 @@ func NewGame() {
 		ActiveRobotStatus: ActiveRobotStatusWaiting,
 	}
 
-	robotsInitialised = 0
+	// Clear all players.
+	robots = robots[:0]
 
 }
 
@@ -50,50 +51,79 @@ func JoinGame() (Robot, error) {
 
 	var robot Robot
 
-	if robotsInitialised == 2 {
+	if len(robots) == 2 {
 		return robot, errors.New("GAME_FULL")
 	}
 
 	// Robot coordinates.
 	x := 0
 	y := 0
-	if robotsInitialised == 1 {
+	if len(robots) == 1 {
 		x = ArenaSize - 1
 		y = ArenaSize - 1
 	}
 
 	// Create robot.
-	robot = Robot{X: x, Y: y, RobotID: generateKey(robotsInitialised, 100)}
-	robots[robotsInitialised] = robot
+	robot = Robot{X: x, Y: y, RobotID: generateKey(len(robots), 100)}
+	robots = append(robots, robot)
 
 	// Add to arena.
 	arena[x][y].Type = ArenaTypeRobot
-	arena[x][y].Robot = &robots[robotsInitialised]
-
-	robotsInitialised++
+	arena[x][y].Robot = &robot
 
 	return robot, nil
 
 }
 
 // MoveRobot moves a robot to give position.
-func MoveRobot(robotIndex int, x int, y int) (Robot, error) {
+func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 
-	var robot Robot
+	var robot *Robot
 
-	if robotIndex >= len(robots) {
+	if robotIndex >= cap(robots) {
 		return robot, errors.New("ROBOT_INDEX_OUT_OF_BOUNDS")
 	}
 
-	// TÄÄ EI TOIMI!!
-	if robots[robotIndex] == (Robot{}) {
+	if robotIndex >= len(robots) {
 		return robot, errors.New("ROBOT_NOT_FOUND")
 	}
 
-	robot = robots[robotIndex]
-	// robot.X = 1
+	robot = &robots[robotIndex]
+
+	// Check out of bounds.
+	if x < 0 || x >= ArenaSize || y < 0 || y >= ArenaSize {
+		return robot, errors.New("OUT_OF_BOUNDS")
+	}
+
+	// Diagonal move not allowed.
+	if robot.X != x && robot.Y != y {
+		return robot, errors.New("INVALID_MOVE")
+	}
+
+	// Only one step allowed.
+	if math.Abs(float64(robot.X-x)) > 1 || math.Abs(float64(robot.Y-y)) > 1 {
+		return robot, errors.New("INVALID_MOVE")
+	}
+
+	// Avoid collision.
+	if arena[x][y].Type == ArenaTypeRobot {
+		return robot, errors.New("INVALID_MOVE")
+	}
+
+	forceMoveRobot(robot, x, y)
 
 	return robot, nil
+
+}
+
+// forceMoveRobot move robot to given position. Does not do any checks.
+func forceMoveRobot(robot *Robot, x int, y int) {
+
+	arena[robot.X][robot.Y].Type = ArenaTypeEmpty
+	robot.X = x
+	robot.Y = y
+	arena[robot.X][robot.Y].Type = ArenaTypeRobot
+	arena[robot.X][robot.Y].Robot = robot
 
 }
 
