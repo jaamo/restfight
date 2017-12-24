@@ -388,7 +388,7 @@ Move robot around. Robot can be move only one step up, down, left or right. Diag
 |-------------------|----------------------------------------------------------------|
 | ERROR             | Generic error.                                                 |
 | OUT_OF_BOUNDS     | Out of bounds.                                                 |
-| ILLEGAL_MOVE      | Illegal move. Only one step up, down, left, right allowed.     |
+| INVALID_MOVE      | Illegal move. Only one step up, down, left, right allowed.     |
 | NOT_YOUR_TURN     | Not your turn.                                                 |
 | ROBOT_NOT_EXISTS | Given robot doesn't exists                                    |
 | GAME_NOT_EXISTS   | Given game doesn't exists                                      |

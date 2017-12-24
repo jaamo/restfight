@@ -1,66 +1,29 @@
+/*
+Core package for running the game.
+*/
 package restfight
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"strconv"
 )
 
-// Status struct.
-type Status struct {
-
-	// Unique game id.
-	GameID int `json:"game_id,omitempty"`
-
-	// Game status: 0 = waiting for players, 1 = robot deployment, 2 = game is on, 3 = game over
-	Status int `json:"status,omitempty"`
-
-	// Active robot. 0 or 1.
-	ActiveRobot int `json:"active_robot,omitempty"`
-
-	// Active robot status. 0 = waiting, 1 = turn started
-	ActiveRobotStatus int `json:"active_robot_status,omitempty"`
-}
-
-/**
- * Size of the arena.
- */
+// ArenaSize defines the size for the game arena. Arena is always square.
 const ArenaSize = 10
 
-/**
- * Arena type. Empty.
- */
-const ArenaTypeEmpty = 0
-const ArenaTypeRobot = 1
-
-/**
- * Single cell object.
- */
-type Cell struct {
-	Type  int    `json:"type,omitempty"`
-	Robot *Robot `json:"robot,omitempty"`
-}
-
-/**
- * Single cell object.
- */
-type Robot struct {
-	RobotID     int `json:"robot_id,omitempty"`
-	Health      int `json:"health,omitempty"`
-	MaxHealth   int `json:"max_health,omitempty"`
-	Capacity    int `json:"capacity,omitempty"`
-	MaxCapacity int `json:"max_capacity,omitempty"`
-	X           int `json:"x,omitempty"`
-	Y           int `json:"y,omitempty"`
-}
-
+// Arena
 var arena [ArenaSize][ArenaSize]Cell
+
+// Robots
 var robots [2]Robot
+var robotsInitialised = 0
+
+// Status
 var status Status
 
-/**
- * Create new game.
- */
+// NewGame starts new game.
 func NewGame() {
 
 	// Init empty arena.
@@ -70,27 +33,71 @@ func NewGame() {
 		}
 	}
 
-	// Add robots.
-	for i := 0; i < len(robots); i++ {
-		x := 0
-		y := 0
-		if i == 1 {
-			x = ArenaSize - 1
-			y = ArenaSize - 1
-		}
-		robots[i] = Robot{X: x, Y: y, RobotID: generateKey(i, 100)}
-		arena[robots[i].X][robots[i].Y].Type = ArenaTypeRobot
-		arena[robots[i].X][robots[i].Y].Robot = &robots[i]
+	// Init game status
+	status = Status{
+		GameID:            generateKey(1, 100),
+		Status:            GameStatusWaitingForPlayers,
+		ActiveRobot:       0,
+		ActiveRobotStatus: ActiveRobotStatusWaiting,
 	}
 
-	// Init game status
-	status = Status{GameID: generateKey, Turn: 0}
+	robotsInitialised = 0
 
 }
 
-/**
- * Get game status.
- */
+// JoinGame add a new robot to the arena and returns it. Return an error if game is full.
+func JoinGame() (Robot, error) {
+
+	var robot Robot
+
+	if robotsInitialised == 2 {
+		return robot, errors.New("GAME_FULL")
+	}
+
+	// Robot coordinates.
+	x := 0
+	y := 0
+	if robotsInitialised == 1 {
+		x = ArenaSize - 1
+		y = ArenaSize - 1
+	}
+
+	// Create robot.
+	robot = Robot{X: x, Y: y, RobotID: generateKey(robotsInitialised, 100)}
+	robots[robotsInitialised] = robot
+
+	// Add to arena.
+	arena[x][y].Type = ArenaTypeRobot
+	arena[x][y].Robot = &robots[robotsInitialised]
+
+	robotsInitialised++
+
+	return robot, nil
+
+}
+
+// MoveRobot moves a robot to give position.
+func MoveRobot(robotIndex int, x int, y int) (Robot, error) {
+
+	var robot Robot
+
+	if robotIndex >= len(robots) {
+		return robot, errors.New("ROBOT_INDEX_OUT_OF_BOUNDS")
+	}
+
+	// TÄÄ EI TOIMI!!
+	if robots[robotIndex] == (Robot{}) {
+		return robot, errors.New("ROBOT_NOT_FOUND")
+	}
+
+	robot = robots[robotIndex]
+	// robot.X = 1
+
+	return robot, nil
+
+}
+
+// GetStatus is only debugging atm.
 func GetStatus() int {
 
 	//var arena [ArenaSize][ArenaSize]Cell
