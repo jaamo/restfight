@@ -12,6 +12,7 @@ JSON schema for a robot. Used in various responses.
 - max_health: 10 (string) - Robot's max health.
 - capacity: 2 (number) - Capacity used.
 - max_capacity: 10 (number) - Max capacity used.
+- radar: {range:3} (object) - Radar.
 
 # REST endpoints
 

@@ -29,7 +29,7 @@ func NewGame() {
 	// Init empty arena.
 	for x := 0; x < ArenaSize; x++ {
 		for y := 0; y < ArenaSize; y++ {
-			arena[x][y] = Cell{Type: ArenaTypeEmpty}
+			arena[x][y] = Cell{Type: ArenaTypeEmpty, X: x, Y: y}
 		}
 	}
 
@@ -64,7 +64,7 @@ func JoinGame() (Robot, error) {
 	}
 
 	// Create robot.
-	robot = Robot{X: x, Y: y, RobotID: generateKey(len(robots), 100)}
+	robot = Robot{X: x, Y: y, RobotID: generateKey(len(robots), 100), Radar: Radar{Range: 3}}
 	robots = append(robots, robot)
 
 	// Add to arena.
@@ -117,10 +117,22 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 }
 
 // Scan returns an area from arena. Uses radar dimension from given robot.
-// TODO: this function :)
-func Scan(x int, y int, robot Robot) [][]Cell {
+func Scan(robot Robot) ([]Cell, error) {
 
-	return [][]Cell{}
+	var cells []Cell
+	for x := 0; x < robot.Radar.Range; x++ {
+		for y := 0; y < robot.Radar.Range; y++ {
+			// fmt.Printf("%d x %d\n", x, y)
+			xOffset := x + robot.X - robot.Radar.Range/2
+			yOffset := y + robot.Y - robot.Radar.Range/2
+			if xOffset >= 0 && yOffset >= 0 && xOffset < ArenaSize && yOffset < ArenaSize {
+				cells = append(cells, arena[xOffset][yOffset])
+			}
+		}
+	}
+
+	return cells, nil
+
 }
 
 // GetStatus is only debugging atm.

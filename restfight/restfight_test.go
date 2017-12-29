@@ -151,6 +151,32 @@ func TestMoveRobot(t *testing.T) {
 	}
 
 }
+func TestScan(t *testing.T) {
+
+	NewGame()
+	JoinGame()
+	JoinGame()
+
+	// Do scan on the top left corner.
+	s, _ := Scan(robots[0])
+
+	if len(s) != 4 {
+		t.Errorf("Too many scan results: %d. Was expecting 4.", len(s))
+	}
+
+	if s[0].Type != ArenaTypeRobot {
+		t.Errorf("Expected robot on 0 x 0. Got %d.", s[0].Type)
+	}
+
+	// Move another robot to range.
+	forceMoveRobot(&robots[1], 0, 1)
+	s, _ = Scan(robots[0])
+
+	if s[1].Type != ArenaTypeRobot {
+		t.Errorf("Expected robot on 1 x 0. Got %d.", s[1].Type)
+	}
+
+}
 func TestKeyGeneration(t *testing.T) {
 	len := 100
 	key := generateKey(1, len)

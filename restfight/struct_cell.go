@@ -3,6 +3,8 @@ package restfight
 // Cell represents a single cell in the arena.
 type Cell struct {
 	Type  int    `json:"type,omitempty"`
+	X     int    `json:"x,omitempty"`
+	Y     int    `json:"y,omitempty"`
 	Robot *Robot `json:"robot,omitempty"`
 }
 
