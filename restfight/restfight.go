@@ -116,15 +116,11 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 
 }
 
-// forceMoveRobot move robot to given position. Does not do any checks.
-func forceMoveRobot(robot *Robot, x int, y int) {
+// Scan returns an area from arena. Uses radar dimension from given robot.
+// TODO: this function :)
+func Scan(x int, y int, robot Robot) [][]Cell {
 
-	arena[robot.X][robot.Y].Type = ArenaTypeEmpty
-	robot.X = x
-	robot.Y = y
-	arena[robot.X][robot.Y].Type = ArenaTypeRobot
-	arena[robot.X][robot.Y].Robot = robot
-
+	return [][]Cell{}
 }
 
 // GetStatus is only debugging atm.
@@ -144,9 +140,18 @@ func GetStatus() int {
 	return 2
 }
 
-/**
- * Generate key.
- */
+// Generate key.
 func generateKey(base int, length int) int {
 	return base*length + rand.Intn(length/10)
+}
+
+// forceMoveRobot move robot to given position. Does not do any checks.
+func forceMoveRobot(robot *Robot, x int, y int) {
+
+	arena[robot.X][robot.Y].Type = ArenaTypeEmpty
+	robot.X = x
+	robot.Y = y
+	arena[robot.X][robot.Y].Type = ArenaTypeRobot
+	arena[robot.X][robot.Y].Robot = robot
+
 }
