@@ -6,42 +6,61 @@ import (
 	"log"
 	"net/http"
 
-	"./restfight"
+	"github.com/jaamo/restfight/restfight"
 
 	"github.com/gorilla/mux"
 )
 
-// This implementation is based on this:
-// https://www.codementor.io/codehakase/building-a-restful-api-with-golang-a6yivzqdo
-
-// Status struct.
-type Status struct {
-	GameID string `json:"game_id,omitempty"`
-	Turn   string `json:"turn,omitempty"`
+// gameAPIError represents API error
+type gameAPIError struct {
+	Message string `json:"message,omitempty"`
+	Error   string `json:"error,omitempty"`
 }
 
-/**
- * Return game status.
- */
+// apiGetStatus return complete game status.
 func apiGetStatus(w http.ResponseWriter, r *http.Request) {
-	var status = Status{GameID: "kala", Turn: "auto"}
-	json.NewEncoder(w).Encode(status)
+	broadcastEvent(GameEvent{EventType: "STATUS_QUERIED"})
+	json.NewEncoder(w).Encode(restfight.GetStatus())
 }
 
-/**
- * Main function.
- */
+// apiJoinGame registers a new player.
+func apiJoinGame(w http.ResponseWriter, r *http.Request) {
+	robot, error := restfight.JoinGame()
+	if error != nil {
+		apiError(w, error.Error(), "")
+	} else {
+		broadcastEvent(GameEvent{EventType: "JOIN_GAME", Robot: robot})
+		json.NewEncoder(w).Encode(robot)
+	}
+}
+
+// apiError is a helper function to return REST error message.
+func apiError(w http.ResponseWriter, error string, message string) {
+	json.NewEncoder(w).Encode(gameAPIError{Error: error, Message: message})
+}
+
+// main
 func main() {
 
-	fmt.Println("running")
+	fmt.Println("Starting server on port 8000.")
 
-	fmt.Println(restfight.GetStatus())
+	// Start new game.
+	restfight.NewGame()
 
 	// Create router,
 	router := mux.NewRouter()
 
-	// Register routes.
+	// Register REST routes.
+	router.HandleFunc("/join", apiJoinGame).Methods("GET")
 	router.HandleFunc("/status", apiGetStatus).Methods("GET")
+
+	// Setup static file serving.
+	s := http.StripPrefix("/viewer/", http.FileServer(http.Dir("./viewer/")))
+	router.PathPrefix("/viewer/").Handler(s)
+	http.Handle("/", router)
+
+	// Handle WebSocket connections.
+	router.HandleFunc("/socket", wsHandler)
 
 	// Start the server.
 	log.Fatal(http.ListenAndServe(":8000", router))
