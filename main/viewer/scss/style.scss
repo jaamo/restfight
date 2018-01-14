@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
+
+$cell-size: 40px;
+
+$color-background: #1E1F20;
+$color-cell: #4D4D50;
+$color-robot: #C5A639;
+
+body {
+  background: $color-background;
+  font-family: 'Ubuntu Mono', monospace;  
+}
+
+.game {
+  position: relative;
+  float: left;
+  .arena {
+    .row {
+      clear: both;
+      .cell {
+        float: left;
+        background: $color-cell;
+        border: 1px solid $color-background;
+        width: $cell-size - 2px;
+        height: $cell-size - 2px;
+      }
+    }
+  }  
+}
+
+.robot {
+  position: absolute;  
+  width: $cell-size - 12px;
+  height: $cell-size - 12px;
+  margin: 6px;
+  background: $color-robot;
+}
+
+.console {
+  float: left;
+  margin-left: 20px;
+  color: #dddddd;
+}
