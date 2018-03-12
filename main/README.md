@@ -1,6 +1,8 @@
-WIP
+## Build
 
-Instruction how to:
+`go build && ./main`
 
-* Install server
-* Contribute
+## Debugging
+
+* Open viewer http://127.0.0.1:8000/viewer/
+* Open debugger http://127.0.0.1:8000/viewer/remote.html

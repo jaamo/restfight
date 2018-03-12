@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Restfight remote controller</title>
+    <script>
+
+        function status() {
+            doFetch('/status', {});
+        }
+
+        function join() {
+            doFetch('/join', {});
+        }
+
+        function echoDebug() {
+            doFetch('/echodebug', {});
+        }
+
+        function doFetch(url, json) {
+            fetch(url).then(function(response) {
+
+                response.json().then(function(data) {
+                    document.querySelector('.js-log').innerHTML += 
+                        url + "<br>" 
+                        + JSON.stringify(json) + "<br>" 
+                        + JSON.stringify(data) + "<br><br>";
+                });
+            });
+        }
+
+    </script>
+</head>
+<body>
+
+        <input type="button" value="Debug" onclick="javascript:echoDebug()">
+        <input type="button" value="Status" onclick="javascript:status()">
+        <input type="button" value="Join" onclick="javascript:join()">
+        <div class="js-log"></div>
+
+</body>
+</html>

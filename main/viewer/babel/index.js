@@ -19,16 +19,22 @@ function initArena() {
 }
 
 function initWebSocket() {
-  let socket = new WebSocket("ws://127.0.0.1:8080");  
+
+  let socket = new WebSocket("ws://127.0.0.1:8000/socket");  
   
   socket.onopen = function (event) {
     log('Connection to server opened.');
     socket.send("Here's some text that the server is urgently awaiting!"); 
   };  
+
+  socket.onmessage = function(event) {
+    log(event.data);    
+  };
+
 }
 
 function log(msg) {
-  document.querySelector('.console').innerHTML += msg + "\n";
+  document.querySelector('.console').innerHTML = msg + "<br>" + document.querySelector('.console').innerHTML;
 }
 
 function init() {

@@ -34,6 +34,11 @@ func apiJoinGame(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// apiEchoDebug echoes a message to clients
+func apiEchoDebug(w http.ResponseWriter, r *http.Request) {
+	broadcastEvent(GameEvent{EventType: "DEBUG"})
+}
+
 // apiError is a helper function to return REST error message.
 func apiError(w http.ResponseWriter, error string, message string) {
 	json.NewEncoder(w).Encode(gameAPIError{Error: error, Message: message})
@@ -51,6 +56,7 @@ func main() {
 	router := mux.NewRouter()
 
 	// Register REST routes.
+	router.HandleFunc("/echodebug", apiEchoDebug).Methods("GET")
 	router.HandleFunc("/join", apiJoinGame).Methods("GET")
 	router.HandleFunc("/status", apiGetStatus).Methods("GET")
 

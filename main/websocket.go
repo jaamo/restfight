@@ -24,8 +24,11 @@ var connections []*websocket.Conn
 // wsHandler handles WebSocket calls.
 func wsHandler(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println("Client joined.")
+
 	// Allow only connections from the same origin,.
 	if r.Header.Get("Origin") != "http://"+r.Host {
+		fmt.Println("Origin not allowed.")
 		http.Error(w, "Origin not allowed", 403)
 		return
 	}
@@ -34,6 +37,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := websocket.Upgrade(w, r, w.Header(), 1024, 1024)
 	if err != nil {
 		http.Error(w, "Could not open websocket connection", http.StatusBadRequest)
+		fmt.Println("Could not open websocket connection.")
 	}
 
 	connections = append(connections, conn)
@@ -45,10 +49,13 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 // broadcastSlice sends an event to all listening clients.
 func broadcastEvent(gameEvent GameEvent) {
 
-	fmt.Printf("Broadcast to clients!")
+	fmt.Printf("Broadcast %s to %d clients!\n", gameEvent.EventType, len(connections))
+	// message := "lol"
 
 	for i := 0; i < len(connections); i++ {
+		fmt.Printf("Broadcast %s to client %d\n", gameEvent.EventType, i)
 		connections[i].WriteJSON(gameEvent)
+		// connections[i].WriteMessage(websocket.TextMessage, []byte(message))
 	}
 
 }
