@@ -545,13 +545,24 @@ module.exports = __webpack_require__(2);
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var arenaSize = 10;
+
 var arena = document.querySelector('.arena');
 
-/**
- * Render arena.
- */
-function initArena() {
+var eventHandlers = {
+  'JOIN_GAME': function JOIN_GAME(event) {
+    var robot = document.createElement('div');
+    robot.classList.add('robot');
+    robot.dataset.robotId = event.robot.robot_id;
+    document.querySelector('body').appendChild(robot);
+  }
+
+  /**
+   * Render arena.
+   */
+};function initArena() {
   for (var y = 0; y < arenaSize; y++) {
     var row = document.createElement('div');
     row.classList.add('row');
@@ -575,11 +586,26 @@ function initWebSocket() {
   };
 
   socket.onmessage = function (event) {
-    log(event.data);
+    handleEvent(JSON.parse(event.data));
   };
 }
 
+function handleEvent(event) {
+  console.log(event);
+  log(event);
+  if (typeof eventHandlers[event.event_type] != 'undefined') {
+    eventHandlers[event.event_type](event);
+  } else {
+    log('Unknown event handler ' + event.event_type);
+  }
+}
+
 function log(msg) {
+
+  if ((typeof msg === 'undefined' ? 'undefined' : _typeof(msg)) == 'object') {
+    msg = JSON.stringify(msg);
+  }
+
   document.querySelector('.console').innerHTML = msg + "<br>" + document.querySelector('.console').innerHTML;
 }
 

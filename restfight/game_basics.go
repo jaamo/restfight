@@ -8,10 +8,10 @@ import (
 
 // Cell represents a single cell in the arena.
 type Cell struct {
-	Type  int    `json:"type,omitempty"`
-	X     int    `json:"x,omitempty"`
-	Y     int    `json:"y,omitempty"`
-	Robot *Robot `json:"robot,omitempty"`
+	Type  int    `json:"type"`
+	X     int    `json:"x"`
+	Y     int    `json:"y"`
+	Robot *Robot `json:"robot"`
 }
 
 // ArenaTypeEmpty is constant for empty cell.

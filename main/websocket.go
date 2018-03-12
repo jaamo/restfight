@@ -55,7 +55,6 @@ func broadcastEvent(gameEvent GameEvent) {
 	for i := 0; i < len(connections); i++ {
 		fmt.Printf("Broadcast %s to client %d\n", gameEvent.EventType, i)
 		connections[i].WriteJSON(gameEvent)
-		// connections[i].WriteMessage(websocket.TextMessage, []byte(message))
 	}
 
 }

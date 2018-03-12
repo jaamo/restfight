@@ -1,5 +1,15 @@
 const arenaSize = 10;
+
 let arena = document.querySelector('.arena');
+
+let eventHandlers = {
+  'JOIN_GAME': (event) => {
+    let robot = document.createElement('div');
+    robot.classList.add('robot');
+    robot.dataset.robotId = event.robot.robot_id;
+    document.querySelector('body').appendChild(robot);
+  }
+}
 
 /**
  * Render arena.
@@ -28,13 +38,29 @@ function initWebSocket() {
   };  
 
   socket.onmessage = function(event) {
-    log(event.data);    
+    handleEvent(JSON.parse(event.data));
   };
 
 }
 
+function handleEvent(event) {
+  console.log(event);
+  log(event);
+  if (typeof(eventHandlers[event.event_type]) != 'undefined') {
+    eventHandlers[event.event_type](event);
+  } else {
+    log('Unknown event handler ' + event.event_type);
+  }
+}
+
 function log(msg) {
+
+  if (typeof(msg) == 'object') {
+    msg = JSON.stringify(msg);
+  }
+
   document.querySelector('.console').innerHTML = msg + "<br>" + document.querySelector('.console').innerHTML;
+
 }
 
 function init() {

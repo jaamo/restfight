@@ -10,14 +10,14 @@ var robots []Robot
 
 // Robot object.
 type Robot struct {
-	RobotID     int   `json:"robot_id,omitempty"`
-	Health      int   `json:"health,omitempty"`
-	MaxHealth   int   `json:"max_health,omitempty"`
-	Capacity    int   `json:"capacity,omitempty"`
-	MaxCapacity int   `json:"max_capacity,omitempty"`
-	X           int   `json:"x,omitempty"`
-	Y           int   `json:"y,omitempty"`
-	Radar       Radar `json:"radar,omitempty"`
+	RobotID     int   `json:"robot_id"`
+	Health      int   `json:"health"`
+	MaxHealth   int   `json:"max_health"`
+	Capacity    int   `json:"capacity"`
+	MaxCapacity int   `json:"max_capacity"`
+	X           int   `json:"x"`
+	Y           int   `json:"y"`
+	Radar       Radar `json:"radar"`
 }
 
 // Radar object.
