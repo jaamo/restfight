@@ -5,7 +5,8 @@ body {
 
 .game {
   position: relative;
-  float: left; }
+  width: 400px;
+  height: 400px; }
   .game .arena {
     position: absolute; }
     .game .arena .cell {
@@ -23,6 +24,5 @@ body {
   background: #C5A639; }
 
 .console {
-  float: left;
   margin-left: 20px;
   color: #dddddd; }

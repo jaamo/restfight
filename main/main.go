@@ -39,6 +39,13 @@ func apiEchoDebug(w http.ResponseWriter, r *http.Request) {
 	broadcastEvent(GameEvent{EventType: "DEBUG"})
 }
 
+// apiEchoDebug resets the game
+func apiNewGame(w http.ResponseWriter, r *http.Request) {
+	restfight.NewGame()
+	json.NewEncoder(w).Encode(restfight.GetStatus())
+	broadcastEvent(GameEvent{EventType: "NEW_GAME"})
+}
+
 // apiError is a helper function to return REST error message.
 func apiError(w http.ResponseWriter, error string, message string) {
 	json.NewEncoder(w).Encode(gameAPIError{Error: error, Message: message})
@@ -59,6 +66,7 @@ func main() {
 	router.HandleFunc("/echodebug", apiEchoDebug).Methods("GET")
 	router.HandleFunc("/join", apiJoinGame).Methods("GET")
 	router.HandleFunc("/status", apiGetStatus).Methods("GET")
+	router.HandleFunc("/new", apiNewGame).Methods("GET")
 
 	// Setup static file serving.
 	s := http.StripPrefix("/viewer/", http.FileServer(http.Dir("./viewer/")))

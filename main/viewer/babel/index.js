@@ -50,16 +50,24 @@ class Robot {
 }
 
 let eventHandlers = {
+
   'JOIN_GAME': (event) => {
     let robot = new Robot(event.robot, arenaCellWidth);
     robots[event.robot.robot_id] = robot;
+  },
+
+  'NEW_GAME': (event) => {
+    initGame();
   }
+  
 }
 
 /**
  * Render arena.
  */
-function initArena() {
+function initGame() {
+  arena.innerHTML = '';
+  robots = {};
   for (let y = 0; y < arenaSize; y++) {
     for (let x = 0; x < arenaSize; x++) {
       let cell = document.createElement('div');
@@ -107,7 +115,7 @@ function log(msg) {
 }
 
 function init() {
-  initArena();
+  initGame();
   initWebSocket();
 }
 

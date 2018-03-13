@@ -17,14 +17,19 @@
             doFetch('/echodebug', {});
         }
 
+        function newGame() {
+            doFetch('/new', {});
+        }
+
         function doFetch(url, json) {
             fetch(url).then(function(response) {
 
                 response.json().then(function(data) {
-                    document.querySelector('.js-log').innerHTML += 
+                    document.querySelector('.js-log').innerHTML = 
                         url + "<br>" 
                         + JSON.stringify(json) + "<br>" 
-                        + JSON.stringify(data) + "<br><br>";
+                        + JSON.stringify(data) + "<br><br>" 
+                        + document.querySelector('.js-log').innerHTML;
                 });
             });
         }
@@ -33,10 +38,11 @@
 </head>
 <body>
 
-        <input type="button" value="Debug" onclick="javascript:echoDebug()">
-        <input type="button" value="Status" onclick="javascript:status()">
-        <input type="button" value="Join" onclick="javascript:join()">
-        <div class="js-log"></div>
+    <input type="button" value="New game" onclick="javascript:newGame()">
+    <input type="button" value="Debug" onclick="javascript:echoDebug()">
+    <input type="button" value="Status" onclick="javascript:status()">
+    <input type="button" value="Join" onclick="javascript:join()">
+    <div class="js-log"></div>
 
 </body>
 </html>

@@ -614,15 +614,22 @@ var Robot = function () {
 }();
 
 var eventHandlers = {
+
   'JOIN_GAME': function JOIN_GAME(event) {
     var robot = new Robot(event.robot, arenaCellWidth);
     robots[event.robot.robot_id] = robot;
+  },
+
+  'NEW_GAME': function NEW_GAME(event) {
+    initGame();
   }
 
   /**
    * Render arena.
    */
-};function initArena() {
+};function initGame() {
+  arena.innerHTML = '';
+  robots = {};
   for (var y = 0; y < arenaSize; y++) {
     for (var x = 0; x < arenaSize; x++) {
       var cell = document.createElement('div');
@@ -668,7 +675,7 @@ function log(msg) {
 }
 
 function init() {
-  initArena();
+  initGame();
   initWebSocket();
 }
 

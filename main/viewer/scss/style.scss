@@ -13,7 +13,8 @@ body {
 
 .game {
   position: relative;
-  float: left;
+  width: 10 * $cell-size;
+  height: 10 * $cell-size;
   .arena {
     position: absolute;
     .cell {
@@ -35,7 +36,6 @@ body {
 }
 
 .console {
-  float: left;
   margin-left: 20px;
   color: #dddddd;
 }
