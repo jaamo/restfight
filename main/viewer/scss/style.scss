@@ -15,15 +15,13 @@ body {
   position: relative;
   float: left;
   .arena {
-    .row {
-      clear: both;
-      .cell {
-        float: left;
-        background: $color-cell;
-        border: 1px solid $color-background;
-        width: $cell-size - 2px;
-        height: $cell-size - 2px;
-      }
+    position: absolute;
+    .cell {
+      position: absolute;
+      background: $color-cell;
+      width: $cell-size - 2px;
+      height: $cell-size - 2px;
+      margin: 1px;
     }
   }  
 }

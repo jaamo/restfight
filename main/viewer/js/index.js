@@ -547,16 +547,76 @@ module.exports = __webpack_require__(2);
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var arenaSize = 10;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var arenaSize = 10;
+var arenaCellWidth = 40;
+
+// Arena DOM element.
 var arena = document.querySelector('.arena');
+
+// List of all robots.
+var robots = {};
+
+/** 
+ * Robot.
+ */
+
+var Robot = function () {
+  function Robot(data, robotWidth) {
+    _classCallCheck(this, Robot);
+
+    this.robotWidth = robotWidth;
+    this.setData(data);
+    this.createElement();
+    this.render();
+  }
+
+  _createClass(Robot, [{
+    key: 'createElement',
+    value: function createElement() {
+      this.el = document.createElement('div');
+      this.el.classList.add('robot');
+      this.el.dataset.robotId = this.robot_id;
+      document.querySelector('.arena').appendChild(this.el);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      this.el.style.left = this.x * this.robotWidth + 'px';
+      this.el.style.top = this.x * this.robotWidth + 'px';
+    }
+  }, {
+    key: 'setData',
+    value: function setData(data) {
+      this.data = data;
+    }
+  }, {
+    key: 'robot_id',
+    get: function get() {
+      return this.data.robot_id;
+    }
+  }, {
+    key: 'x',
+    get: function get() {
+      return this.data.x;
+    }
+  }, {
+    key: 'y',
+    get: function get() {
+      return this.data.x;
+    }
+  }]);
+
+  return Robot;
+}();
 
 var eventHandlers = {
   'JOIN_GAME': function JOIN_GAME(event) {
-    var robot = document.createElement('div');
-    robot.classList.add('robot');
-    robot.dataset.robotId = event.robot.robot_id;
-    document.querySelector('body').appendChild(robot);
+    var robot = new Robot(event.robot, arenaCellWidth);
+    robots[event.robot.robot_id] = robot;
   }
 
   /**
@@ -564,15 +624,13 @@ var eventHandlers = {
    */
 };function initArena() {
   for (var y = 0; y < arenaSize; y++) {
-    var row = document.createElement('div');
-    row.classList.add('row');
     for (var x = 0; x < arenaSize; x++) {
       var cell = document.createElement('div');
       cell.classList.add('cell');
-      cell.innerHTML = '';
-      row.appendChild(cell);
+      cell.style.left = x * arenaCellWidth + 'px';
+      cell.style.top = y * arenaCellWidth + 'px';
+      arena.appendChild(cell);
     }
-    arena.appendChild(row);
   }
 }
 

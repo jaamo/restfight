@@ -1,13 +1,58 @@
 const arenaSize = 10;
+const arenaCellWidth = 40;
 
+// Arena DOM element.
 let arena = document.querySelector('.arena');
+
+// List of all robots.
+let robots = {};
+
+/** 
+ * Robot.
+ */
+class Robot {
+
+  constructor(data, robotWidth) {
+    this.robotWidth = robotWidth;
+    this.setData(data);
+    this.createElement();
+    this.render();
+  }
+
+  createElement() {
+    this.el = document.createElement('div');
+    this.el.classList.add('robot');
+    this.el.dataset.robotId = this.robot_id;
+    document.querySelector('.arena').appendChild(this.el);
+  }
+
+  render() {
+    this.el.style.left = this.x * this.robotWidth + 'px';
+    this.el.style.top = this.x * this.robotWidth + 'px';
+  }
+
+  setData(data) {
+    this.data = data;
+  }
+
+  get robot_id() {
+    return this.data.robot_id;
+  }
+
+  get x() {
+    return this.data.x;
+  }
+
+  get y() {
+    return this.data.x;
+  }
+
+}
 
 let eventHandlers = {
   'JOIN_GAME': (event) => {
-    let robot = document.createElement('div');
-    robot.classList.add('robot');
-    robot.dataset.robotId = event.robot.robot_id;
-    document.querySelector('body').appendChild(robot);
+    let robot = new Robot(event.robot, arenaCellWidth);
+    robots[event.robot.robot_id] = robot;
   }
 }
 
@@ -16,15 +61,13 @@ let eventHandlers = {
  */
 function initArena() {
   for (let y = 0; y < arenaSize; y++) {
-    let row = document.createElement('div');
-    row.classList.add('row');
     for (let x = 0; x < arenaSize; x++) {
       let cell = document.createElement('div');
       cell.classList.add('cell');
-      cell.innerHTML = '';
-      row.appendChild(cell); 
+      cell.style.left = x * arenaCellWidth + 'px';
+      cell.style.top = y * arenaCellWidth + 'px';
+      arena.appendChild(cell); 
     }
-    arena.appendChild(row);
   }  
 }
 
