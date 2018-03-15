@@ -585,8 +585,8 @@ var Robot = function () {
   }, {
     key: 'render',
     value: function render() {
-      this.el.style.left = this.x * this.robotWidth + 'px';
-      this.el.style.top = this.x * this.robotWidth + 'px';
+      this.el.style.left = this.data.x * this.robotWidth + 'px';
+      this.el.style.top = this.data.y * this.robotWidth + 'px';
     }
   }, {
     key: 'setData',
@@ -602,11 +602,19 @@ var Robot = function () {
     key: 'x',
     get: function get() {
       return this.data.x;
+    },
+    set: function set(x) {
+      this.data.x = x;
+      this.render();
     }
   }, {
     key: 'y',
     get: function get() {
       return this.data.x;
+    },
+    set: function set(y) {
+      this.data.y = y;
+      this.render();
     }
   }]);
 
@@ -618,6 +626,11 @@ var eventHandlers = {
   'JOIN_GAME': function JOIN_GAME(event) {
     var robot = new Robot(event.robot, arenaCellWidth);
     robots[event.robot.robot_id] = robot;
+  },
+
+  'ROBOT_MOVED': function ROBOT_MOVED(event) {
+    robots[event.robot.robot_id].x = event.robot.x;
+    robots[event.robot.robot_id].y = event.robot.y;
   },
 
   'NEW_GAME': function NEW_GAME(event) {

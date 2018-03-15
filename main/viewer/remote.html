@@ -25,12 +25,20 @@
             doFetch('/new', {});
         }
 
-        function moveDown() {
-            doFetch('/move', {});
+        function move(xDelta, yDelta) {
+            let x = parseInt(document.getElementById('x').value) + xDelta;
+            let y = parseInt(document.getElementById('y').value) + yDelta;
+            document.getElementById('x').value = x;
+            document.getElementById('y').value = y;
+            doFetch('/move', {x: x, y: y});
         }
 
         function doFetch(url, json, callback) {
-            fetch(url).then(function(response) {
+            let params = '?';
+            for (var i in json) {
+                params += i + '=' + json[i] + "&";
+            }
+            fetch(url + params).then(function(response) {
 
                 response.json().then(function(data) {
                     callback(data);
@@ -54,7 +62,11 @@
     <input type="button" value="Debug" onclick="javascript:echoDebug()"><br>
     <input type="button" value="Status" onclick="javascript:status()"><br>
     <input type="button" value="Join" onclick="javascript:join()"><br>
-    <input type="button" value="Move down" onclick="javascript:moveDown()"><br>
+    
+    <input type="button" value="Left" onclick="javascript:move(-1, 0)">
+    <input type="button" value="Right" onclick="javascript:move(1, 0)">
+    <input type="button" value="Up" onclick="javascript:move(0, -1)">
+    <input type="button" value="Down" onclick="javascript:move(0, 1)"><br>
     <div class="js-log"></div>
 
 </body>

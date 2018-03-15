@@ -27,8 +27,8 @@ class Robot {
   }
 
   render() {
-    this.el.style.left = this.x * this.robotWidth + 'px';
-    this.el.style.top = this.x * this.robotWidth + 'px';
+    this.el.style.left = this.data.x * this.robotWidth + 'px';
+    this.el.style.top = this.data.y * this.robotWidth + 'px';
   }
 
   setData(data) {
@@ -47,6 +47,15 @@ class Robot {
     return this.data.x;
   }
 
+  set x(x) {
+    this.data.x = x;
+    this.render();
+  }
+
+  set y(y) {
+    this.data.y = y;
+    this.render();
+  }  
 }
 
 let eventHandlers = {
@@ -54,6 +63,11 @@ let eventHandlers = {
   'JOIN_GAME': (event) => {
     let robot = new Robot(event.robot, arenaCellWidth);
     robots[event.robot.robot_id] = robot;
+  },
+
+  'ROBOT_MOVED': (event) => {
+    robots[event.robot.robot_id].x = event.robot.x;
+    robots[event.robot.robot_id].y = event.robot.y;
   },
 
   'NEW_GAME': (event) => {
