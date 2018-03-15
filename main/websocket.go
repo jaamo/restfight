@@ -18,6 +18,12 @@ type GameEvent struct {
 	Robot     restfight.Robot `json:"robot"`
 }
 
+// GameError represents an error.
+type GameError struct {
+	Error   string `json:"error"`
+	Message string `json:"message"`
+}
+
 // connections stores all active websocket connections
 var connections []*websocket.Conn
 

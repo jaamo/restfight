@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/jaamo/restfight/restfight"
 
@@ -46,6 +47,37 @@ func apiNewGame(w http.ResponseWriter, r *http.Request) {
 	broadcastEvent(GameEvent{EventType: "NEW_GAME"})
 }
 
+// apiMove moves robot new position
+func apiMove(w http.ResponseWriter, r *http.Request) {
+
+	xParams, ok := r.URL.Query()["x"]
+	if !ok || len(xParams) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter x missing."})
+		return
+	}
+
+	yParams, ok := r.URL.Query()["y"]
+	if !ok || len(yParams) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter y missing."})
+		return
+	}
+
+	x, _ := strconv.Atoi(xParams[0])
+	y, _ := strconv.Atoi(yParams[0])
+
+	// TODO fix hard coded robot id
+	robot, err := restfight.MoveRobot(0, x, y)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: err.Error()})
+		return
+	}
+
+	json.NewEncoder(w).Encode(robot)
+	broadcastEvent(GameEvent{EventType: "ROBOT_MOVED", Robot: *robot})
+
+}
+
 // apiError is a helper function to return REST error message.
 func apiError(w http.ResponseWriter, error string, message string) {
 	json.NewEncoder(w).Encode(gameAPIError{Error: error, Message: message})
@@ -67,6 +99,7 @@ func main() {
 	router.HandleFunc("/join", apiJoinGame).Methods("GET")
 	router.HandleFunc("/status", apiGetStatus).Methods("GET")
 	router.HandleFunc("/new", apiNewGame).Methods("GET")
+	router.HandleFunc("/move", apiMove).Methods("GET")
 
 	// Setup static file serving.
 	s := http.StripPrefix("/viewer/", http.FileServer(http.Dir("./viewer/")))

@@ -10,7 +10,11 @@
         }
 
         function join() {
-            doFetch('/join', {});
+            doFetch('/join', {}, function(data) {
+                document.getElementById('robot_id').value = data.robot_id;
+                document.getElementById('x').value = data.x;
+                document.getElementById('y').value = data.y;
+            });
         }
 
         function echoDebug() {
@@ -21,10 +25,15 @@
             doFetch('/new', {});
         }
 
-        function doFetch(url, json) {
+        function moveDown() {
+            doFetch('/move', {});
+        }
+
+        function doFetch(url, json, callback) {
             fetch(url).then(function(response) {
 
                 response.json().then(function(data) {
+                    callback(data);
                     document.querySelector('.js-log').innerHTML = 
                         url + "<br>" 
                         + JSON.stringify(json) + "<br>" 
@@ -38,10 +47,14 @@
 </head>
 <body>
 
-    <input type="button" value="New game" onclick="javascript:newGame()">
-    <input type="button" value="Debug" onclick="javascript:echoDebug()">
-    <input type="button" value="Status" onclick="javascript:status()">
-    <input type="button" value="Join" onclick="javascript:join()">
+    Robot id <input type="text" value="0" id="robot_id"><br>
+    y <input type="text" value="0" id="x"><br>
+    x <input type="text" value="0" id="y"><br>
+    <input type="button" value="New game" onclick="javascript:newGame()"><br>
+    <input type="button" value="Debug" onclick="javascript:echoDebug()"><br>
+    <input type="button" value="Status" onclick="javascript:status()"><br>
+    <input type="button" value="Join" onclick="javascript:join()"><br>
+    <input type="button" value="Move down" onclick="javascript:moveDown()"><br>
     <div class="js-log"></div>
 
 </body>
