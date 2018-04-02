@@ -10,14 +10,16 @@ var robots []Robot
 
 // Robot object.
 type Robot struct {
-	RobotID     int   `json:"robot_id"`
-	Health      int   `json:"health"`
-	MaxHealth   int   `json:"max_health"`
-	Capacity    int   `json:"capacity"`
-	MaxCapacity int   `json:"max_capacity"`
-	X           int   `json:"x"`
-	Y           int   `json:"y"`
-	Radar       Radar `json:"radar"`
+	RobotID     int `json:"robot_id"`
+	Health      int `json:"health"`
+	MaxHealth   int `json:"max_health"`
+	Capacity    int `json:"capacity"`
+	MaxCapacity int `json:"max_capacity"`
+	X           int `json:"x"`
+	Y           int `json:"y"`
+	MaxMoves    int `json:"max_moves"`
+	Moves       int `json:"moves"`
+	RadarRange  int `json:"radar_range"`
 }
 
 // Radar object.
@@ -29,11 +31,11 @@ type Radar struct {
 func Scan(robot Robot) ([]Cell, error) {
 
 	var cells []Cell
-	for x := 0; x < robot.Radar.Range; x++ {
-		for y := 0; y < robot.Radar.Range; y++ {
+	for x := 0; x < robot.RadarRange; x++ {
+		for y := 0; y < robot.RadarRange; y++ {
 			// fmt.Printf("%d x %d\n", x, y)
-			xOffset := x + robot.X - robot.Radar.Range/2
-			yOffset := y + robot.Y - robot.Radar.Range/2
+			xOffset := x + robot.X - robot.RadarRange/2
+			yOffset := y + robot.Y - robot.RadarRange/2
 			if xOffset >= 0 && yOffset >= 0 && xOffset < ArenaSize && yOffset < ArenaSize {
 				cells = append(cells, arena[xOffset][yOffset])
 			}
@@ -44,7 +46,7 @@ func Scan(robot Robot) ([]Cell, error) {
 
 }
 
-// MoveRobot moves a robot to give position.
+// MoveRobot moves a robot to given position.
 func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 
 	var robot *Robot
@@ -57,7 +59,16 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 		return robot, errors.New("ROBOT_NOT_FOUND")
 	}
 
+	if robotIndex != turn {
+		return robot, errors.New("NOT_YOUR_TURN")
+	}
+
 	robot = &robots[robotIndex]
+
+	// Check moves left.
+	if robot.Moves >= robot.MaxMoves {
+		return robot, errors.New("OUT_OF_MOVES")
+	}
 
 	// Check out of bounds.
 	if x < 0 || x >= ArenaSize || y < 0 || y >= ArenaSize {
@@ -79,13 +90,17 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 		return robot, errors.New("INVALID_MOVE")
 	}
 
+	// Increase move counter.
+	robot.Moves++
+
+	// Move.
 	forceMoveRobot(robot, x, y)
 
 	return robot, nil
 
 }
 
-// forceMoveRobot move robot to given position. Does not do any checks.
+// forceMoveRobot move robot to given position. Does not do any checks. Does not increase move count. Internal use only.
 func forceMoveRobot(robot *Robot, x int, y int) {
 
 	arena[robot.X][robot.Y].Type = ArenaTypeEmpty
@@ -94,4 +109,16 @@ func forceMoveRobot(robot *Robot, x int, y int) {
 	arena[robot.X][robot.Y].Type = ArenaTypeRobot
 	arena[robot.X][robot.Y].Robot = robot
 
+}
+
+// GetRobotIndexByID return a robot by ID.
+func GetRobotIndexByID(robotID int) (int, error) {
+
+	for i := 0; i < len(robots); i++ {
+		if robots[i].RobotID == robotID {
+			return i, nil
+		}
+	}
+
+	return 0, errors.New("ROBOT_NOT_FOUND")
 }

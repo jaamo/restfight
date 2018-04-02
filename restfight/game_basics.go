@@ -14,6 +14,9 @@ type Cell struct {
 	Robot *Robot `json:"robot"`
 }
 
+// Turn. Active robot index. If -1 game is not started.
+var turn int
+
 // ArenaTypeEmpty is constant for empty cell.
 const ArenaTypeEmpty = 0
 
@@ -111,12 +114,15 @@ func NewGame() {
 		ActiveRobotStatus: ActiveRobotStatusWaiting,
 	}
 
+	// Reset turn.
+	turn = -1
+
 	// Clear all players.
 	robots = robots[:0]
 
 }
 
-// JoinGame add a new robot to the arena and returns it. Return an error if game is full.
+// JoinGame add a new robot with specified info to the arena and return it. Return an error if game is full.
 func JoinGame() (Robot, error) {
 
 	var robot Robot
@@ -134,8 +140,20 @@ func JoinGame() (Robot, error) {
 	}
 
 	// Create robot.
-	robot = Robot{X: x, Y: y, RobotID: generateKey(len(robots), 100), Radar: Radar{Range: 3}}
+	robot = Robot{
+		X:          x,
+		Y:          y,
+		RobotID:    generateKey(len(robots), 100),
+		RadarRange: 3,
+		Moves:      0,
+		MaxMoves:   3,
+	}
 	robots = append(robots, robot)
+
+	// Two players joined, set turn.
+	if len(robots) == 2 {
+		turn = 0
+	}
 
 	// Add to arena.
 	arena[x][y].Type = ArenaTypeRobot
@@ -143,6 +161,16 @@ func JoinGame() (Robot, error) {
 
 	return robot, nil
 
+}
+
+// CanPlay takes robot index as an argument and return true if the given robot is active (is that robot's turn)
+func CanPlay(robotIndex int) bool {
+	return turn == robotIndex
+}
+
+// ToggleTurn switches turn to another robot.
+func ToggleTurn() {
+	turn = (turn + 1) % 2
 }
 
 // GetStatus is only debugging atm.

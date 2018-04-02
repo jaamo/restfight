@@ -62,19 +62,48 @@ func apiMove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	robotIDParam, ok := r.URL.Query()["robot_id"]
+	if !ok || len(robotIDParam) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter robot_id missing."})
+		return
+	}
+
 	x, _ := strconv.Atoi(xParams[0])
 	y, _ := strconv.Atoi(yParams[0])
+	robotID, _ := strconv.Atoi(robotIDParam[0])
+	var robotIndex, _ = restfight.GetRobotIndexByID(robotID)
 
-	// TODO fix hard coded robot id
-	robot, err := restfight.MoveRobot(0, x, y)
+	// Move robot.
+	robot, err := restfight.MoveRobot(robotIndex, x, y)
 
 	if err != nil {
-		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: err.Error()})
+		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: fmt.Sprintf("You triedt move robot %d (index %d) to  %d x %d.", robotID, robotIndex, x, y)})
 		return
 	}
 
 	json.NewEncoder(w).Encode(robot)
 	broadcastEvent(GameEvent{EventType: "ROBOT_MOVED", Robot: *robot})
+
+}
+
+// apiMove moves robot new position
+func apiEndTurn(w http.ResponseWriter, r *http.Request) {
+
+	robotIDParam, ok := r.URL.Query()["robot_id"]
+	if !ok || len(robotIDParam) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter robot_id missing."})
+		return
+	}
+
+	robotID, _ := strconv.Atoi(robotIDParam[0])
+	var robotIndex, _ = restfight.GetRobotIndexByID(robotID)
+
+	if restfight.CanPlay(robotIndex) {
+		restfight.ToggleTurn()
+		broadcastEvent(GameEvent{EventType: "NEW_TURN"})
+	} else {
+		json.NewEncoder(w).Encode(GameError{Error: "NOT_YOUR_TURN", Message: "Not your turn."})
+	}
 
 }
 
@@ -100,6 +129,7 @@ func main() {
 	router.HandleFunc("/status", apiGetStatus).Methods("GET")
 	router.HandleFunc("/new", apiNewGame).Methods("GET")
 	router.HandleFunc("/move", apiMove).Methods("GET")
+	router.HandleFunc("/endturn", apiEndTurn).Methods("GET")
 
 	// Setup static file serving.
 	s := http.StripPrefix("/viewer/", http.FileServer(http.Dir("./viewer/")))

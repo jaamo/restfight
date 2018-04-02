@@ -25,12 +25,16 @@
             doFetch('/new', {});
         }
 
+        function endTurn() {
+            doFetch('/endturn', {robot_id: document.getElementById('robot_id').value});
+        }
+
         function move(xDelta, yDelta) {
             let x = parseInt(document.getElementById('x').value) + xDelta;
             let y = parseInt(document.getElementById('y').value) + yDelta;
             document.getElementById('x').value = x;
             document.getElementById('y').value = y;
-            doFetch('/move', {x: x, y: y});
+            doFetch('/move', {x: x, y: y, robot_id: document.getElementById('robot_id').value});
         }
 
         function doFetch(url, json, callback) {
@@ -62,6 +66,7 @@
     <input type="button" value="Debug" onclick="javascript:echoDebug()"><br>
     <input type="button" value="Status" onclick="javascript:status()"><br>
     <input type="button" value="Join" onclick="javascript:join()"><br>
+    <input type="button" value="End turn" onclick="javascript:endTurn()"><br>
     
     <input type="button" value="Left" onclick="javascript:move(-1, 0)">
     <input type="button" value="Right" onclick="javascript:move(1, 0)">
