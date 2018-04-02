@@ -27,22 +27,10 @@ type Radar struct {
 	Range int
 }
 
-// Scan returns an area from arena. Uses radar dimension from given robot.
-func Scan(robot Robot) ([]Cell, error) {
+// Scan returns arena.
+func Scan() [ArenaSize][ArenaSize]Cell {
 
-	var cells []Cell
-	for x := 0; x < robot.RadarRange; x++ {
-		for y := 0; y < robot.RadarRange; y++ {
-			// fmt.Printf("%d x %d\n", x, y)
-			xOffset := x + robot.X - robot.RadarRange/2
-			yOffset := y + robot.Y - robot.RadarRange/2
-			if xOffset >= 0 && yOffset >= 0 && xOffset < ArenaSize && yOffset < ArenaSize {
-				cells = append(cells, arena[xOffset][yOffset])
-			}
-		}
-	}
-
-	return cells, nil
+	return arena
 
 }
 
@@ -100,17 +88,6 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 
 }
 
-// forceMoveRobot move robot to given position. Does not do any checks. Does not increase move count. Internal use only.
-func forceMoveRobot(robot *Robot, x int, y int) {
-
-	arena[robot.X][robot.Y].Type = ArenaTypeEmpty
-	robot.X = x
-	robot.Y = y
-	arena[robot.X][robot.Y].Type = ArenaTypeRobot
-	arena[robot.X][robot.Y].Robot = robot
-
-}
-
 // GetRobotIndexByID return a robot by ID.
 func GetRobotIndexByID(robotID int) (int, error) {
 
@@ -121,4 +98,15 @@ func GetRobotIndexByID(robotID int) (int, error) {
 	}
 
 	return 0, errors.New("ROBOT_NOT_FOUND")
+}
+
+// forceMoveRobot move robot to given position. Does not do any checks. Does not increase move count. Internal use only.
+func forceMoveRobot(robot *Robot, x int, y int) {
+
+	arena[robot.X][robot.Y].Type = ArenaTypeEmpty
+	robot.X = x
+	robot.Y = y
+	arena[robot.X][robot.Y].Type = ArenaTypeRobot
+	arena[robot.X][robot.Y].Robot = robot
+
 }
