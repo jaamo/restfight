@@ -110,3 +110,8 @@ func forceMoveRobot(robot *Robot, x int, y int) {
 	arena[robot.X][robot.Y].Robot = robot
 
 }
+
+// Shoot fires the weapon and shoots to given position.
+func Shoot(robotIndex int, x int, y int) error {
+	return nil
+}
