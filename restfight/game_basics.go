@@ -15,7 +15,7 @@ type Cell struct {
 }
 
 // Turn. Active robot index. If -1 game is not started.
-var turn int
+// var turn int
 
 // ArenaTypeEmpty is constant for empty cell.
 const ArenaTypeEmpty = 0
@@ -38,18 +38,18 @@ var arena [ArenaSize][ArenaSize]Cell
 type Status struct {
 
 	// Unique game id.
-	GameID int `json:"game_id,omitempty"`
+	GameID int `json:"game_id"`
 
 	// Game status: 0 = waiting for players, 1 = robot deployment, 2 = game is on, 3 = game over
-	Status GameStatus `json:"status,omitempty"`
+	Status GameStatus `json:"status"`
 
 	// Active robot. 0 or 1.
-	ActiveRobot int `json:"active_robot,omitempty"`
+	ActiveRobot int `json:"active_robot"`
 
 	Robots *[]*Robot `json:"robots"`
 
 	// Active robot status. 0 = waiting, 1 = turn started
-	ActiveRobotStatus ActiveRobotStatus `json:"active_robot_status,omitempty"`
+	ActiveRobotStatus ActiveRobotStatus `json:"active_robot_status"`
 }
 
 /**
@@ -62,7 +62,6 @@ type GameStatus int
  */
 const (
 	GameStatusWaitingForPlayers GameStatus = iota
-	GameStatusDeployment
 	GameStatusRunning
 	GameStatusGameOver
 )
@@ -118,7 +117,7 @@ func NewGame() {
 	}
 
 	// Reset turn.
-	turn = -1
+	status.ActiveRobot = 0
 
 	// Clear all players.
 	robots = robots[:0]
@@ -140,8 +139,8 @@ func JoinGame() (Robot, error) {
 	if len(robots) == 1 {
 		x = ArenaSize - 1
 		y = ArenaSize - 1
-		x = 0
-		y = 1
+		// x = 0
+		// y = 1
 	}
 
 	// Create robot.
@@ -161,7 +160,7 @@ func JoinGame() (Robot, error) {
 
 	// Two players joined, set turn.
 	if len(robots) == 2 {
-		turn = 0
+		status.Status = GameStatusRunning
 	}
 
 	// Add to arena.
@@ -174,14 +173,14 @@ func JoinGame() (Robot, error) {
 
 // CanPlay takes robot index as an argument and return true if the given robot is active (is that robot's turn)
 func CanPlay(robotIndex int) bool {
-	return turn == robotIndex
+	return status.ActiveRobot == robotIndex
 }
 
 // ToggleTurn switches turn to another robot.
 func ToggleTurn() {
 
 	// Swap turn.
-	turn = (turn + 1) % 2
+	status.ActiveRobot = (status.ActiveRobot + 1) % 2
 
 	// Reset ammo and moves.
 	for i := 0; i < len(robots); i++ {
@@ -206,4 +205,15 @@ func GetStatus() Status {
 	fmt.Println(output)
 
 	return status
+}
+
+// updateStatus updates status based on robots alive.
+func updateStatus() {
+
+	for i := 0; i < len(robots); i++ {
+		if robots[i].Health <= 0 {
+			status.Status = GameStatusGameOver
+		}
+	}
+
 }

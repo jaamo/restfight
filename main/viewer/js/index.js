@@ -701,6 +701,10 @@ function handleEvent(event) {
 
 function updateRobotsLegend(robots) {
 
+  if (!robots) {
+    return;
+  }
+
   var legend = document.querySelector('.robots-legend');
   legend.innerHTML = '';
   robots.forEach(function (robot) {

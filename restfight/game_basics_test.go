@@ -33,19 +33,19 @@ func TestToggleTurn(t *testing.T) {
 	JoinGame()
 	JoinGame()
 
-	if turn != 0 {
+	if status.ActiveRobot != 0 {
 		t.Errorf("New game. Turn should be 0.")
 	}
 
 	ToggleTurn()
 
-	if turn != 1 {
+	if status.ActiveRobot != 1 {
 		t.Errorf("2nd turn. Turn should be 1.")
 	}
 
 	ToggleTurn()
 
-	if turn != 0 {
+	if status.ActiveRobot != 0 {
 		t.Errorf("3rd turn. Turn should be 0.")
 	}
 

@@ -48,15 +48,15 @@ func TestMoveRobot(t *testing.T) {
 	}
 
 	// Turn should still be -1.
-	if turn != -1 {
-		t.Errorf("Turn should be -1, was %d", turn)
+	if status.ActiveRobot != 0 && status.Status == GameStatusWaitingForPlayers {
+		t.Errorf("Turn should be -1, was %d", status.ActiveRobot)
 	}
 
 	JoinGame()
 
 	// Turn should be 0.
-	if turn != 0 {
-		t.Errorf("Turn should be 0, was %d", turn)
+	if status.ActiveRobot != 0 {
+		t.Errorf("Turn should be 0, was %d", status.ActiveRobot)
 	}
 
 	// Turn check.
@@ -124,8 +124,8 @@ func TestMoveRobot(t *testing.T) {
 
 	// Collision
 	robot.Moves = 0
-	forceMoveRobot(&robots[0], 0, 0)
-	forceMoveRobot(&robots[1], 0, 1)
+	forceMoveRobot(robots[0], 0, 0)
+	forceMoveRobot(robots[1], 0, 1)
 	// GetStatus()
 	_, err = MoveRobot(0, 0, 1)
 	if err == nil || err.Error() != "COLLISIONS_NOT_ALLOWED" {
@@ -169,7 +169,7 @@ func TestShoot(t *testing.T) {
 		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
 	}
 
-	forceMoveRobot(&robots[1], 2, 2)
+	forceMoveRobot(robots[1], 2, 2)
 	GetStatus()
 
 	// Should run out of ammo.

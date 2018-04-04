@@ -142,6 +142,10 @@ function handleEvent(event) {
 
 function updateRobotsLegend(robots) {
 
+  if (!robots) {
+    return;
+  }
+
   let legend = document.querySelector('.robots-legend');
   legend.innerHTML = '';
   robots.forEach((robot) => {

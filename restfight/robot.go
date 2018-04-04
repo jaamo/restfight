@@ -2,7 +2,6 @@ package restfight
 
 import (
 	"errors"
-	"fmt"
 	"math"
 )
 
@@ -23,7 +22,6 @@ type Robot struct {
 	WeaponRange int `json:"weapon_range"`
 	WeaponPower int `json:"weapon_power"`
 	WeaponAmmo  int `json:"weapon_ammo"`
-	// RadarRange  int `json:"radar_range"`
 }
 
 // Radar object.
@@ -51,7 +49,11 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 		return robot, errors.New("ROBOT_NOT_FOUND")
 	}
 
-	if robotIndex != turn {
+	if status.Status != GameStatusRunning {
+		return robot, errors.New("GAME_NOT_RUNNING")
+	}
+
+	if robotIndex != status.ActiveRobot {
 		return robot, errors.New("NOT_YOUR_TURN")
 	}
 
@@ -117,7 +119,11 @@ func Shoot(robotIndex int, x int, y int) error {
 		return errors.New("ROBOT_NOT_FOUND")
 	}
 
-	if robotIndex != turn {
+	if status.Status != GameStatusRunning {
+		return errors.New("GAME_NOT_RUNNING")
+	}
+
+	if robotIndex != status.ActiveRobot {
 		return errors.New("NOT_YOUR_TURN")
 	}
 
@@ -146,9 +152,8 @@ func Shoot(robotIndex int, x int, y int) error {
 		cell.Robot.Health -= robot.WeaponPower
 	}
 
-	fmt.Printf("cell: Robot health %d.\n", cell.Robot.Health)
-	fmt.Printf("robots: Robot health %d.\n", robots[1].Health)
-	fmt.Printf("status: Robot health %d.\n", (*status.Robots)[1].Health)
+	// Update game status.
+	updateStatus()
 
 	return nil
 }
