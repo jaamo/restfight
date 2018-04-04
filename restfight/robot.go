@@ -19,7 +19,10 @@ type Robot struct {
 	Y           int `json:"y"`
 	MaxMoves    int `json:"max_moves"`
 	Moves       int `json:"moves"`
-	RadarRange  int `json:"radar_range"`
+	WeaponRange int `json:"weapon_range"`
+	WeaponPower int `json:"weapon_power"`
+	WeaponAmmo  int `json:"weapon_ammo"`
+	// RadarRange  int `json:"radar_range"`
 }
 
 // Radar object.
@@ -100,6 +103,51 @@ func GetRobotIndexByID(robotID int) (int, error) {
 	return 0, errors.New("ROBOT_NOT_FOUND")
 }
 
+// Shoot fires the weapon and shoots to given position.
+func Shoot(robotIndex int, x int, y int) error {
+
+	var robot *Robot
+
+	if robotIndex >= cap(robots) {
+		return errors.New("ROBOT_INDEX_OUT_OF_BOUNDS")
+	}
+
+	if robotIndex >= len(robots) {
+		return errors.New("ROBOT_NOT_FOUND")
+	}
+
+	if robotIndex != turn {
+		return errors.New("NOT_YOUR_TURN")
+	}
+
+	robot = &robots[robotIndex]
+
+	if robot.WeaponAmmo <= 0 {
+		return errors.New("OUT_OF_AMMO")
+	}
+
+	if x < 0 || x >= ArenaSize || y < 0 || y >= ArenaSize {
+		return errors.New("OUT_OF_BOUNDS")
+	}
+
+	if math.Abs(float64(x-robot.X)) > float64(robot.WeaponRange) {
+		return errors.New("OUT_OF_RANGE")
+	}
+
+	// Reduce ammo.
+	robot.WeaponAmmo = 0
+
+	// Get cell.
+	cell := arena[x][y]
+
+	// If robot found, reduce health.
+	if cell.Type == ArenaTypeRobot {
+		cell.Robot.Health -= robot.WeaponPower
+	}
+
+	return nil
+}
+
 // forceMoveRobot move robot to given position. Does not do any checks. Does not increase move count. Internal use only.
 func forceMoveRobot(robot *Robot, x int, y int) {
 
@@ -109,9 +157,4 @@ func forceMoveRobot(robot *Robot, x int, y int) {
 	arena[robot.X][robot.Y].Type = ArenaTypeRobot
 	arena[robot.X][robot.Y].Robot = robot
 
-}
-
-// Shoot fires the weapon and shoots to given position.
-func Shoot(robotIndex int, x int, y int) error {
-	return nil
 }

@@ -1,7 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Ubuntu+Mono");
 body {
   background: #1E1F20;
-  font-family: 'Ubuntu Mono', monospace; }
+  font-family: 'Ubuntu Mono', monospace;
+  color: #dddddd; }
 
 .game {
   position: relative;
@@ -15,6 +16,13 @@ body {
       width: 38px;
       height: 38px;
       margin: 1px; }
+    .game .arena .explosion {
+      position: absolute;
+      background: #fc0000;
+      width: 38px;
+      height: 38px;
+      margin: 1px;
+      opacity: 0; }
 
 .robot {
   position: absolute;
@@ -24,5 +32,22 @@ body {
   background: #C5A639; }
 
 .console {
-  margin-left: 20px;
-  color: #dddddd; }
+  margin-left: 20px; }
+
+.robots-legend {
+  position: absolute;
+  top: 1rem;
+  right: 1rem; }
+
+.blink {
+  animation: blink-animation 0.2s steps(5, start) 5; }
+
+@keyframes blink-animation {
+  0% {
+    opacity: 0; }
+  49% {
+    opacity: 0; }
+  50% {
+    opacity: 1; }
+  100% {
+    opacity: 1; } }

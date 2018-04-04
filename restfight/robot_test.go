@@ -118,10 +118,66 @@ func TestMoveRobot(t *testing.T) {
 	robot.Moves = 0
 	forceMoveRobot(&robots[0], 0, 0)
 	forceMoveRobot(&robots[1], 0, 1)
-	GetStatus()
+	// GetStatus()
 	_, err = MoveRobot(0, 0, 1)
 	if err == nil || err.Error() != "INVALID_MOVE" {
 		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	}
+
+}
+
+func TestShoot(t *testing.T) {
+
+	NewGame()
+	JoinGame()
+	JoinGame()
+
+	var err error
+
+	// Player 1 can't shoot, not his turn.
+	err = Shoot(1, 1, 1)
+	if err == nil || err.Error() != "NOT_YOUR_TURN" {
+		t.Errorf("Was expecting error NOT_YOUR_TURN, got %s", err)
+	}
+
+	// Shoot outside arena.
+	err = Shoot(0, -1, 0)
+	if err == nil || err.Error() != "OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
+	}
+
+	err = Shoot(0, 100, 0)
+	if err == nil || err.Error() != "OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
+	}
+
+	err = Shoot(0, 0, -1)
+	if err == nil || err.Error() != "OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
+	}
+
+	err = Shoot(0, 0, 1000)
+	if err == nil || err.Error() != "OUT_OF_BOUNDS" {
+		t.Errorf("Was expecting error OUT_OF_BOUNDS, got %s", err)
+	}
+
+	forceMoveRobot(&robots[1], 2, 2)
+	GetStatus()
+
+	// Should run out of ammo.
+	err = Shoot(0, 1, 1)
+	err = Shoot(0, 1, 1)
+	if err == nil || err.Error() != "OUT_OF_AMMO" {
+		t.Errorf("Was expecting error OUT_OF_AMMO, got %s", err)
+	}
+	robots[0].WeaponAmmo = 1
+
+	err = Shoot(0, 2, 2)
+	if err != nil {
+		t.Errorf("Did not expect an error on succesful shoot.")
+	}
+	if robots[1].Health != robots[1].MaxHealth-robots[0].WeaponPower {
+		t.Errorf("Health was supposed to be %d but it was %d.", robots[1].MaxHealth-robots[0].WeaponPower, robots[1].Health)
 	}
 
 }

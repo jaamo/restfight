@@ -4,11 +4,13 @@ $cell-size: 40px;
 
 $color-background: #1E1F20;
 $color-cell: #4D4D50;
+$color-explosion: rgb(252, 0, 0);
 $color-robot: #C5A639;
 
 body {
   background: $color-background;
   font-family: 'Ubuntu Mono', monospace;  
+  color: #dddddd;
 }
 
 .game {
@@ -24,6 +26,14 @@ body {
       height: $cell-size - 2px;
       margin: 1px;
     }
+    .explosion {
+      position: absolute;
+      background: $color-explosion;
+      width: $cell-size - 2px;
+      height: $cell-size - 2px;
+      margin: 1px;
+      opacity: 0;
+    }
   }  
 }
 
@@ -37,5 +47,28 @@ body {
 
 .console {
   margin-left: 20px;
-  color: #dddddd;
+}
+
+.robots-legend {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.blink {
+  animation: blink-animation 0.2s steps(5, start) 5;
+}
+@keyframes blink-animation {
+  0% {
+    opacity: 0;
+  }
+  49% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }

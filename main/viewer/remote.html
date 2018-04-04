@@ -37,6 +37,14 @@
             doFetch('/move', {x: x, y: y, robot_id: document.getElementById('robot_id').value});
         }
 
+        function shoot() {
+            doFetch('/shoot', {
+                x: document.getElementById('x').value,
+                y: document.getElementById('y').value, 
+                robot_id: document.getElementById('robot_id').value
+            });
+        }
+
         function doFetch(url, json, callback) {
             let params = '?';
             for (var i in json) {
@@ -67,6 +75,7 @@
     <input type="button" value="Status" onclick="javascript:status()"><br>
     <input type="button" value="Join" onclick="javascript:join()"><br>
     <input type="button" value="End turn" onclick="javascript:endTurn()"><br>
+    <input type="button" value="Shoot" onclick="javascript:shoot()"><br>
     
     <input type="button" value="Left" onclick="javascript:move(-1, 0)">
     <input type="button" value="Right" onclick="javascript:move(1, 0)">

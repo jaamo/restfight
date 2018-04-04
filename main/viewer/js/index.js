@@ -560,6 +560,9 @@ var arena = document.querySelector('.arena');
 // List of all robots.
 var robots = {};
 
+// Explosion.
+var explosion = null;
+
 /** 
  * Robot.
  */
@@ -623,6 +626,19 @@ var Robot = function () {
 
 var eventHandlers = {
 
+  'STATUS_QUERIED': function STATUS_QUERIED(event) {
+    updateRobotsLegend(event.status.robots);
+  },
+
+  'SHOOT': function SHOOT(event) {
+    explosion.style.left = event.x * arenaCellWidth + 'px';
+    explosion.style.top = event.y * arenaCellWidth + 'px';
+    explosion.classList.add('blink');
+    setTimeout(function () {
+      explosion.classList.remove('blink');
+    }, 5000);
+  },
+
   'JOIN_GAME': function JOIN_GAME(event) {
     var robot = new Robot(event.robot, arenaCellWidth);
     robots[event.robot.robot_id] = robot;
@@ -652,6 +668,11 @@ var eventHandlers = {
       arena.appendChild(cell);
     }
   }
+
+  explosion = document.createElement('div');
+  explosion.classList.add('explosion');
+  // cell.classList.add('blink');
+  arena.appendChild(explosion);
 }
 
 function initWebSocket() {
@@ -676,6 +697,19 @@ function handleEvent(event) {
   } else {
     log('Unknown event handler ' + event.event_type);
   }
+}
+
+function updateRobotsLegend(robots) {
+
+  var legend = document.querySelector('.robots-legend');
+  legend.innerHTML = '';
+  robots.forEach(function (robot) {
+    legend.innerHTML += 'id: ' + robot.robot_id + '<br>';
+    legend.innerHTML += 'health: ' + robot.health + '<br>';
+    legend.innerHTML += 'x: ' + robot.x + '<br>';
+    legend.innerHTML += 'y: ' + robot.y + '<br>';
+    legend.innerHTML += '<br>';
+  });
 }
 
 function log(msg) {

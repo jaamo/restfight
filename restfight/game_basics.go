@@ -46,6 +46,8 @@ type Status struct {
 	// Active robot. 0 or 1.
 	ActiveRobot int `json:"active_robot,omitempty"`
 
+	Robots *[]Robot `json:"robots"`
+
 	// Active robot status. 0 = waiting, 1 = turn started
 	ActiveRobotStatus ActiveRobotStatus `json:"active_robot_status,omitempty"`
 }
@@ -112,6 +114,7 @@ func NewGame() {
 		Status:            GameStatusWaitingForPlayers,
 		ActiveRobot:       0,
 		ActiveRobotStatus: ActiveRobotStatusWaiting,
+		Robots:            &robots,
 	}
 
 	// Reset turn.
@@ -141,12 +144,16 @@ func JoinGame() (Robot, error) {
 
 	// Create robot.
 	robot = Robot{
-		X:          x,
-		Y:          y,
-		RobotID:    generateKey(len(robots), 100),
-		RadarRange: 3,
-		Moves:      0,
-		MaxMoves:   3,
+		X:           x,
+		Y:           y,
+		RobotID:     generateKey(len(robots), 100),
+		Moves:       0,
+		MaxMoves:    3,
+		WeaponPower: 3,
+		WeaponRange: 3,
+		WeaponAmmo:  1,
+		Health:      10,
+		MaxHealth:   10,
 	}
 	robots = append(robots, robot)
 
@@ -170,7 +177,15 @@ func CanPlay(robotIndex int) bool {
 
 // ToggleTurn switches turn to another robot.
 func ToggleTurn() {
+
+	// Swap turn.
 	turn = (turn + 1) % 2
+
+	// Reset ammo.
+	for i := 0; i < len(robots); i++ {
+		robots[i].WeaponAmmo = 1
+	}
+
 }
 
 // GetStatus is only debugging atm.

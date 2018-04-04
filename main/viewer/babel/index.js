@@ -7,6 +7,9 @@ let arena = document.querySelector('.arena');
 // List of all robots.
 let robots = {};
 
+// Explosion.
+let explosion = null;
+
 /** 
  * Robot.
  */
@@ -60,6 +63,19 @@ class Robot {
 
 let eventHandlers = {
 
+  'STATUS_QUERIED': (event) => {
+    updateRobotsLegend(event.status.robots);
+  },
+
+  'SHOOT': (event) => {
+    explosion.style.left = event.x * arenaCellWidth + 'px';
+    explosion.style.top = event.y * arenaCellWidth + 'px';
+    explosion.classList.add('blink');
+    setTimeout(() => {
+      explosion.classList.remove('blink');
+    }, 5000);
+  },
+
   'JOIN_GAME': (event) => {
     let robot = new Robot(event.robot, arenaCellWidth);
     robots[event.robot.robot_id] = robot;
@@ -91,6 +107,12 @@ function initGame() {
       arena.appendChild(cell); 
     }
   }  
+
+  explosion = document.createElement('div');
+  explosion.classList.add('explosion');
+  // cell.classList.add('blink');
+  arena.appendChild(explosion); 
+
 }
 
 function initWebSocket() {
@@ -116,6 +138,20 @@ function handleEvent(event) {
   } else {
     log('Unknown event handler ' + event.event_type);
   }
+}
+
+function updateRobotsLegend(robots) {
+
+  let legend = document.querySelector('.robots-legend');
+  legend.innerHTML = '';
+  robots.forEach((robot) => {
+    legend.innerHTML += 'id: ' + robot.robot_id + '<br>';
+    legend.innerHTML += 'health: ' + robot.health + '<br>';
+    legend.innerHTML += 'x: ' + robot.x + '<br>';
+    legend.innerHTML += 'y: ' + robot.y + '<br>';
+    legend.innerHTML += '<br>';
+  })
+
 }
 
 function log(msg) {

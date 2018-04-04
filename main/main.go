@@ -20,7 +20,7 @@ type gameAPIError struct {
 
 // apiGetStatus return complete game status.
 func apiGetStatus(w http.ResponseWriter, r *http.Request) {
-	broadcastEvent(GameEvent{EventType: "STATUS_QUERIED"})
+	broadcastEvent(GameEvent{EventType: "STATUS_QUERIED", Status: restfight.GetStatus()})
 	json.NewEncoder(w).Encode(restfight.GetStatus())
 }
 
@@ -77,12 +77,50 @@ func apiMove(w http.ResponseWriter, r *http.Request) {
 	robot, err := restfight.MoveRobot(robotIndex, x, y)
 
 	if err != nil {
-		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: fmt.Sprintf("You triedt move robot %d (index %d) to  %d x %d.", robotID, robotIndex, x, y)})
+		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: fmt.Sprintf("You tried move robot %d (index %d) to  %d x %d.", robotID, robotIndex, x, y)})
 		return
 	}
 
 	json.NewEncoder(w).Encode(robot)
 	broadcastEvent(GameEvent{EventType: "ROBOT_MOVED", Robot: *robot})
+
+}
+
+func apiShoot(w http.ResponseWriter, r *http.Request) {
+
+	xParams, ok := r.URL.Query()["x"]
+	if !ok || len(xParams) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter x missing."})
+		return
+	}
+
+	yParams, ok := r.URL.Query()["y"]
+	if !ok || len(yParams) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter y missing."})
+		return
+	}
+
+	robotIDParam, ok := r.URL.Query()["robot_id"]
+	if !ok || len(robotIDParam) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter robot_id missing."})
+		return
+	}
+
+	x, _ := strconv.Atoi(xParams[0])
+	y, _ := strconv.Atoi(yParams[0])
+	robotID, _ := strconv.Atoi(robotIDParam[0])
+	var robotIndex, _ = restfight.GetRobotIndexByID(robotID)
+
+	// Shoot.
+	err := restfight.Shoot(robotIndex, x, y)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: fmt.Sprintf("You tried to shoot to %d x %d.", x, y)})
+		return
+	}
+
+	broadcastEvent(GameEvent{EventType: "SHOOT", X: x, Y: y})
+	json.NewEncoder(w).Encode(GameEvent{X: x, Y: y})
 
 }
 
@@ -130,6 +168,7 @@ func main() {
 	router.HandleFunc("/new", apiNewGame).Methods("GET")
 	router.HandleFunc("/move", apiMove).Methods("GET")
 	router.HandleFunc("/endturn", apiEndTurn).Methods("GET")
+	router.HandleFunc("/shoot", apiShoot).Methods("GET")
 
 	// Setup static file serving.
 	s := http.StripPrefix("/viewer/", http.FileServer(http.Dir("./viewer/")))

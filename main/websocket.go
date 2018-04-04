@@ -14,8 +14,11 @@ type msg struct {
 
 // GameEvent represents a single event on the game (movement, shoot etc).
 type GameEvent struct {
-	EventType string          `json:"event_type"`
-	Robot     restfight.Robot `json:"robot"`
+	EventType string           `json:"event_type"`
+	Robot     restfight.Robot  `json:"robot"`
+	X         int              `json:"x"`
+	Y         int              `json:"y"`
+	Status    restfight.Status `json:"status"`
 }
 
 // GameError represents an error.
