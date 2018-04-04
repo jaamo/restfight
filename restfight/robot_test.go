@@ -67,20 +67,20 @@ func TestMoveRobot(t *testing.T) {
 
 	// Try some invalid moves.
 	_, err = MoveRobot(0, 2, 0)
-	if err == nil || err.Error() != "INVALID_MOVE" {
-		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	if err == nil || err.Error() != "ONLY_ONE_STEP_MOVES_ALLOWED" {
+		t.Errorf("Was expecting error ONLY_ONE_STEP_MOVES_ALLOWED, got %s", err)
 	}
 	_, err = MoveRobot(0, 0, 5)
-	if err == nil || err.Error() != "INVALID_MOVE" {
-		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	if err == nil || err.Error() != "ONLY_ONE_STEP_MOVES_ALLOWED" {
+		t.Errorf("Was expecting error ONLY_ONE_STEP_MOVES_ALLOWED, got %s", err)
 	}
 	_, err = MoveRobot(0, 8, 5)
-	if err == nil || err.Error() != "INVALID_MOVE" {
-		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	if err == nil || err.Error() != "DIAGONAL_MOVES_NOT_ALLOWED" {
+		t.Errorf("Was expecting error DIAGONAL_MOVES_NOT_ALLOWED, got %s", err)
 	}
 	_, err = MoveRobot(0, 1, 1)
-	if err == nil || err.Error() != "INVALID_MOVE" {
-		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	if err == nil || err.Error() != "DIAGONAL_MOVES_NOT_ALLOWED" {
+		t.Errorf("Was expecting error DIAGONAL_MOVES_NOT_ALLOWED, got %s", err)
 	}
 
 	// Out of bounds.
@@ -114,14 +114,22 @@ func TestMoveRobot(t *testing.T) {
 		t.Errorf("Was expecting error OUT_OF_MOVES, got %s", err)
 	}
 
+	// New turn. Should be able to move again.
+	ToggleTurn()
+	ToggleTurn()
+	robot, err = MoveRobot(0, 0, 4)
+	if err != nil {
+		t.Errorf("Wasn't expecting errors, got %s", err)
+	}
+
 	// Collision
 	robot.Moves = 0
 	forceMoveRobot(&robots[0], 0, 0)
 	forceMoveRobot(&robots[1], 0, 1)
 	// GetStatus()
 	_, err = MoveRobot(0, 0, 1)
-	if err == nil || err.Error() != "INVALID_MOVE" {
-		t.Errorf("Was expecting error INVALID_MOVE, got %s", err)
+	if err == nil || err.Error() != "COLLISIONS_NOT_ALLOWED" {
+		t.Errorf("Was expecting error COLLISIONS_NOT_ALLOWED, got %s", err)
 	}
 
 }

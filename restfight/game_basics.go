@@ -140,6 +140,8 @@ func JoinGame() (Robot, error) {
 	if len(robots) == 1 {
 		x = ArenaSize - 1
 		y = ArenaSize - 1
+		x = 0
+		y = 1
 	}
 
 	// Create robot.
@@ -181,9 +183,10 @@ func ToggleTurn() {
 	// Swap turn.
 	turn = (turn + 1) % 2
 
-	// Reset ammo.
+	// Reset ammo and moves.
 	for i := 0; i < len(robots); i++ {
 		robots[i].WeaponAmmo = 1
+		robots[i].Moves = 0
 	}
 
 }

@@ -68,17 +68,17 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 
 	// Diagonal move not allowed.
 	if robot.X != x && robot.Y != y {
-		return robot, errors.New("INVALID_MOVE")
+		return robot, errors.New("DIAGONAL_MOVES_NOT_ALLOWED")
 	}
 
 	// Only one step allowed.
 	if math.Abs(float64(robot.X-x)) > 1 || math.Abs(float64(robot.Y-y)) > 1 {
-		return robot, errors.New("INVALID_MOVE")
+		return robot, errors.New("ONLY_ONE_STEP_MOVES_ALLOWED")
 	}
 
 	// Avoid collision.
 	if arena[x][y].Type == ArenaTypeRobot {
-		return robot, errors.New("INVALID_MOVE")
+		return robot, errors.New("COLLISIONS_NOT_ALLOWED")
 	}
 
 	// Increase move counter.
