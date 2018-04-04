@@ -46,7 +46,7 @@ type Status struct {
 	// Active robot. 0 or 1.
 	ActiveRobot int `json:"active_robot,omitempty"`
 
-	Robots *[]Robot `json:"robots"`
+	Robots *[]*Robot `json:"robots"`
 
 	// Active robot status. 0 = waiting, 1 = turn started
 	ActiveRobotStatus ActiveRobotStatus `json:"active_robot_status,omitempty"`
@@ -157,7 +157,7 @@ func JoinGame() (Robot, error) {
 		Health:      10,
 		MaxHealth:   10,
 	}
-	robots = append(robots, robot)
+	robots = append(robots, &robot)
 
 	// Two players joined, set turn.
 	if len(robots) == 2 {

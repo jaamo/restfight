@@ -2,11 +2,12 @@ package restfight
 
 import (
 	"errors"
+	"fmt"
 	"math"
 )
 
 // Robots
-var robots []Robot
+var robots []*Robot
 
 // Robot object.
 type Robot struct {
@@ -54,7 +55,7 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 		return robot, errors.New("NOT_YOUR_TURN")
 	}
 
-	robot = &robots[robotIndex]
+	robot = robots[robotIndex]
 
 	// Check moves left.
 	if robot.Moves >= robot.MaxMoves {
@@ -120,7 +121,7 @@ func Shoot(robotIndex int, x int, y int) error {
 		return errors.New("NOT_YOUR_TURN")
 	}
 
-	robot = &robots[robotIndex]
+	robot = robots[robotIndex]
 
 	if robot.WeaponAmmo <= 0 {
 		return errors.New("OUT_OF_AMMO")
@@ -144,6 +145,10 @@ func Shoot(robotIndex int, x int, y int) error {
 	if cell.Type == ArenaTypeRobot {
 		cell.Robot.Health -= robot.WeaponPower
 	}
+
+	fmt.Printf("cell: Robot health %d.\n", cell.Robot.Health)
+	fmt.Printf("robots: Robot health %d.\n", robots[1].Health)
+	fmt.Printf("status: Robot health %d.\n", (*status.Robots)[1].Health)
 
 	return nil
 }
