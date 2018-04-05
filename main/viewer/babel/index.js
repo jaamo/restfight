@@ -63,7 +63,7 @@ class Robot {
 
 let eventHandlers = {
 
-  'STATUS_QUERIED': (event) => {
+  'STATUS': (event) => {
     updateRobotsLegend(event.status.robots);
   },
 

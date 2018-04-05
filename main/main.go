@@ -20,7 +20,7 @@ type gameAPIError struct {
 
 // apiGetStatus return complete game status.
 func apiGetStatus(w http.ResponseWriter, r *http.Request) {
-	broadcastEvent(GameEvent{EventType: "STATUS_QUERIED", Status: restfight.GetStatus()})
+	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
 	json.NewEncoder(w).Encode(restfight.GetStatus())
 }
 
@@ -31,6 +31,7 @@ func apiJoinGame(w http.ResponseWriter, r *http.Request) {
 		apiError(w, error.Error(), "")
 	} else {
 		broadcastEvent(GameEvent{EventType: "JOIN_GAME", Robot: robot})
+		broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
 		json.NewEncoder(w).Encode(robot)
 	}
 }
@@ -120,6 +121,7 @@ func apiShoot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	broadcastEvent(GameEvent{EventType: "SHOOT", X: x, Y: y})
+	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
 	json.NewEncoder(w).Encode(GameEvent{X: x, Y: y})
 
 }

@@ -626,7 +626,7 @@ var Robot = function () {
 
 var eventHandlers = {
 
-  'STATUS_QUERIED': function STATUS_QUERIED(event) {
+  'STATUS': function STATUS(event) {
     updateRobotsLegend(event.status.robots);
   },
 
