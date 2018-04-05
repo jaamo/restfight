@@ -4,6 +4,22 @@ body {
   font-family: 'Ubuntu Mono', monospace;
   color: #dddddd; }
 
+.gameover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 100vh;
+  text-align: center;
+  font-size: 5rem;
+  color: red;
+  background: rgba(0, 0, 0, 0.5);
+  left: 0;
+  top: 0;
+  display: none; }
+
+.gameover--visible {
+  display: block; }
+
 .game {
   position: relative;
   width: 400px;
@@ -16,6 +32,8 @@ body {
       width: 38px;
       height: 38px;
       margin: 1px; }
+      .game .arena .cell--obstacle {
+        background: #929299; }
     .game .arena .explosion {
       position: absolute;
       background: #fc0000;

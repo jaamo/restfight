@@ -23,6 +23,9 @@ const ArenaTypeEmpty = 0
 // ArenaTypeRobot is constant for a cell with a robot.
 const ArenaTypeRobot = 1
 
+// ArenaTypeRobot is constant for a cell with a robot.
+const ArenaTypeObstacle = 2
+
 // Status
 var status Status
 
@@ -47,6 +50,8 @@ type Status struct {
 	ActiveRobot int `json:"active_robot"`
 
 	Robots *[]*Robot `json:"robots"`
+
+	Arena *[ArenaSize][ArenaSize]Cell `json:"arena"`
 
 	// Active robot status. 0 = waiting, 1 = turn started
 	ActiveRobotStatus ActiveRobotStatus `json:"active_robot_status"`
@@ -107,6 +112,8 @@ func NewGame() {
 		}
 	}
 
+	randomMap(&arena)
+
 	// Init game status
 	status = Status{
 		GameID:            generateKey(1, 100),
@@ -114,6 +121,7 @@ func NewGame() {
 		ActiveRobot:       0,
 		ActiveRobotStatus: ActiveRobotStatusWaiting,
 		Robots:            &robots,
+		Arena:             &arena,
 	}
 
 	// Reset turn.

@@ -4,6 +4,7 @@ $cell-size: 40px;
 
 $color-background: #1E1F20;
 $color-cell: #4D4D50;
+$color-obstacle: rgb(146, 146, 153);
 $color-explosion: rgb(252, 0, 0);
 $color-robot: #C5A639;
 
@@ -11,6 +12,23 @@ body {
   background: $color-background;
   font-family: 'Ubuntu Mono', monospace;  
   color: #dddddd;
+}
+
+.gameover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 100vh;
+  text-align: center;
+  font-size: 5rem;
+  color: red;
+  background: rgba(0,0,0,0.5);
+  left: 0;
+  top: 0;
+  display: none;
+}
+.gameover--visible {
+  display: block;
 }
 
 .game {
@@ -25,6 +43,9 @@ body {
       width: $cell-size - 2px;
       height: $cell-size - 2px;
       margin: 1px;
+      &--obstacle {
+        background: $color-obstacle;
+      }
     }
     .explosion {
       position: absolute;

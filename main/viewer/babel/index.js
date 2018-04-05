@@ -64,7 +64,17 @@ class Robot {
 let eventHandlers = {
 
   'STATUS': (event) => {
+
     updateRobotsLegend(event.status.robots);
+
+    updateArena(event.status.arena);
+
+    if (event.status.status == 2) {
+      document.querySelector('.gameover').classList.add('gameover--visible');
+    } else {
+      document.querySelector('.gameover').classList.remove('gameover--visible');      
+    }
+
   },
 
   'SHOOT': (event) => {
@@ -102,6 +112,8 @@ function initGame() {
     for (let x = 0; x < arenaSize; x++) {
       let cell = document.createElement('div');
       cell.classList.add('cell');
+      cell.dataset.x = x;
+      cell.dataset.y = y;
       cell.style.left = x * arenaCellWidth + 'px';
       cell.style.top = y * arenaCellWidth + 'px';
       arena.appendChild(cell); 
@@ -110,6 +122,7 @@ function initGame() {
 
   explosion = document.createElement('div');
   explosion.classList.add('explosion');
+  document.querySelector('.gameover').classList.remove('gameover--visible');
   // cell.classList.add('blink');
   arena.appendChild(explosion); 
 
@@ -131,7 +144,7 @@ function initWebSocket() {
 }
 
 function handleEvent(event) {
-  console.log(event);
+  // console.log(event);
   log(event);
   if (typeof(eventHandlers[event.event_type]) != 'undefined') {
     eventHandlers[event.event_type](event);
@@ -158,13 +171,25 @@ function updateRobotsLegend(robots) {
 
 }
 
+function updateArena(arena) {
+  arena.forEach((row) => {
+    row.forEach((cell) => {
+      if (cell.type == 2) {
+        document.querySelector('div[data-x="'+cell.x+'"][data-y="'+cell.y+'"]').classList.add('cell--obstacle')
+      }
+    })
+  })
+}
+
 function log(msg) {
 
-  if (typeof(msg) == 'object') {
-    msg = JSON.stringify(msg);
-  }
+  console.log(msg);
 
-  document.querySelector('.console').innerHTML = msg + "<br>" + document.querySelector('.console').innerHTML;
+  // if (typeof(msg) == 'object') {
+  //   msg = JSON.stringify(msg);
+  // }
+
+  // document.querySelector('.console').innerHTML = msg + "<br>" + document.querySelector('.console').innerHTML;
 
 }
 

@@ -545,8 +545,6 @@ module.exports = __webpack_require__(2);
 "use strict";
 
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -627,7 +625,16 @@ var Robot = function () {
 var eventHandlers = {
 
   'STATUS': function STATUS(event) {
+
     updateRobotsLegend(event.status.robots);
+
+    updateArena(event.status.arena);
+
+    if (event.status.status == 2) {
+      document.querySelector('.gameover').classList.add('gameover--visible');
+    } else {
+      document.querySelector('.gameover').classList.remove('gameover--visible');
+    }
   },
 
   'SHOOT': function SHOOT(event) {
@@ -663,6 +670,8 @@ var eventHandlers = {
     for (var x = 0; x < arenaSize; x++) {
       var cell = document.createElement('div');
       cell.classList.add('cell');
+      cell.dataset.x = x;
+      cell.dataset.y = y;
       cell.style.left = x * arenaCellWidth + 'px';
       cell.style.top = y * arenaCellWidth + 'px';
       arena.appendChild(cell);
@@ -671,6 +680,7 @@ var eventHandlers = {
 
   explosion = document.createElement('div');
   explosion.classList.add('explosion');
+  document.querySelector('.gameover').classList.remove('gameover--visible');
   // cell.classList.add('blink');
   arena.appendChild(explosion);
 }
@@ -690,7 +700,7 @@ function initWebSocket() {
 }
 
 function handleEvent(event) {
-  console.log(event);
+  // console.log(event);
   log(event);
   if (typeof eventHandlers[event.event_type] != 'undefined') {
     eventHandlers[event.event_type](event);
@@ -716,13 +726,25 @@ function updateRobotsLegend(robots) {
   });
 }
 
+function updateArena(arena) {
+  arena.forEach(function (row) {
+    row.forEach(function (cell) {
+      if (cell.type == 2) {
+        document.querySelector('div[data-x="' + cell.x + '"][data-y="' + cell.y + '"]').classList.add('cell--obstacle');
+      }
+    });
+  });
+}
+
 function log(msg) {
 
-  if ((typeof msg === 'undefined' ? 'undefined' : _typeof(msg)) == 'object') {
-    msg = JSON.stringify(msg);
-  }
+  console.log(msg);
 
-  document.querySelector('.console').innerHTML = msg + "<br>" + document.querySelector('.console').innerHTML;
+  // if (typeof(msg) == 'object') {
+  //   msg = JSON.stringify(msg);
+  // }
+
+  // document.querySelector('.console').innerHTML = msg + "<br>" + document.querySelector('.console').innerHTML;
 }
 
 function init() {
