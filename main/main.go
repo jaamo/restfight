@@ -26,7 +26,31 @@ func apiGetStatus(w http.ResponseWriter, r *http.Request) {
 
 // apiJoinGame registers a new player.
 func apiJoinGame(w http.ResponseWriter, r *http.Request) {
-	robot, error := restfight.JoinGame()
+
+	engineLevelParam, ok := r.URL.Query()["engineLevel"]
+	if !ok || len(engineLevelParam) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter engineLevel missing."})
+		return
+	}
+
+	shieldLevelParam, ok := r.URL.Query()["shieldLevel"]
+	if !ok || len(shieldLevelParam) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter shieldLevel missing."})
+		return
+	}
+
+	weaponLevelParam, ok := r.URL.Query()["weaponLevel"]
+	if !ok || len(weaponLevelParam) < 1 {
+		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter weaponLevel missing."})
+		return
+	}
+
+	engineLevel, _ := strconv.Atoi(engineLevelParam[0])
+	shieldLevel, _ := strconv.Atoi(shieldLevelParam[0])
+	weaponLevel, _ := strconv.Atoi(weaponLevelParam[0])
+
+	robot, error := restfight.JoinGame(engineLevel, shieldLevel, weaponLevel)
+
 	if error != nil {
 		apiError(w, error.Error(), "")
 	} else {

@@ -37,9 +37,10 @@ func NewGame() {
 }
 
 // JoinGame add a new robot with specified info to the arena and return it. Return an error if game is full.
-func JoinGame() (Robot, error) {
+func JoinGame(engineLevel int, shieldLevel int, weaponLevel int) (Robot, error) {
 
 	var robot Robot
+	var err error
 
 	if len(robots) == 2 {
 		return robot, errors.New("GAME_FULL")
@@ -56,18 +57,13 @@ func JoinGame() (Robot, error) {
 	}
 
 	// Create robot.
-	robot = Robot{
-		X:           x,
-		Y:           y,
-		RobotID:     generateKey(len(robots), 100),
-		Moves:       0,
-		MaxMoves:    3,
-		WeaponPower: 3,
-		WeaponRange: 3,
-		WeaponAmmo:  1,
-		Health:      10,
-		MaxHealth:   10,
+	robot, err = CreateRobot(engineLevel, shieldLevel, weaponLevel)
+	if err != nil {
+		return robot, err
 	}
+	robot.RobotID = generateKey(len(robots), 100)
+	robot.X = x
+	robot.Y = y
 	robots = append(robots, &robot)
 
 	// Two players joined, set turn.

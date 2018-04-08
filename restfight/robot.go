@@ -2,17 +2,107 @@ package restfight
 
 import (
 	"errors"
+	"fmt"
 	"math"
 )
 
-// Scan returns arena.
+// CreateRobot based on given properties.
+func CreateRobot(engineLevel int, shieldLevel int, weaponLevel int) (Robot, error) {
+
+	var robot = Robot{
+		Health:      0,
+		MaxHealth:   0,
+		Capacity:    0,
+		MaxCapacity: 10,
+		X:           0,
+		Y:           0,
+		MaxMoves:    0,
+		Moves:       0,
+		WeaponRange: 0,
+		WeaponPower: 0,
+		WeaponAmmo:  0,
+	}
+
+	// Parameter validation.
+	if engineLevel < 0 || engineLevel > 2 {
+		return robot, errors.New("INVALID_ENGINE_LEVEL")
+	}
+	if shieldLevel < 0 || shieldLevel > 2 {
+		return robot, errors.New("INVALID_SHIELD_LEVEL")
+	}
+	if weaponLevel < 0 || weaponLevel > 2 {
+		return robot, errors.New("INVALID_WEAPON_LEVEL")
+	}
+
+	// Ssssset!
+	robot.WeaponLevel = weaponLevel
+	robot.EngineLevel = engineLevel
+	robot.ShieldLevel = shieldLevel
+
+	// Setup engine.
+	if engineLevel == 0 {
+		robot.Capacity += 2
+		robot.MaxMoves = 2
+	}
+	if engineLevel == 1 {
+		robot.Capacity += 4
+		robot.MaxMoves = 4
+	}
+	if engineLevel == 2 {
+		robot.Capacity += 6
+		robot.MaxMoves = 6
+	}
+
+	// Setup shield.
+	if shieldLevel == 0 {
+		robot.Capacity += 2
+		robot.WeaponAmmo = 2
+	}
+	if shieldLevel == 1 {
+		robot.Capacity += 4
+		robot.MaxHealth = 4
+	}
+	if shieldLevel == 2 {
+		robot.Capacity += 6
+		robot.MaxHealth = 6
+	}
+	robot.Health = robot.MaxHealth
+
+	// Setup weapon.
+	if weaponLevel == 0 {
+		robot.Capacity += 2
+		robot.WeaponRange = 2
+		robot.WeaponPower = 2
+	}
+	if weaponLevel == 1 {
+		robot.Capacity += 4
+		robot.WeaponRange = 4
+		robot.WeaponPower = 4
+	}
+	if weaponLevel == 2 {
+		robot.Capacity += 6
+		robot.WeaponRange = 6
+		robot.WeaponPower = 6
+	}
+
+	// Check capacity.
+	if robot.Capacity > 10 {
+		fmt.Printf("Robot capacity exceed: %d\n", robot.Capacity)
+		return robot, errors.New("ROBOT_CAPACITY_EXCEED")
+	}
+
+	return robot, nil
+
+}
+
+// Scan surrounding arena.
 func Scan() [ArenaSize][ArenaSize]Cell {
 
 	return arena
 
 }
 
-// MoveRobot moves a robot to given position.
+// MoveRobot to a given position.
 func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 
 	var robot *Robot

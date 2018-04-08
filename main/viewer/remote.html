@@ -10,7 +10,12 @@
         }
 
         function join() {
-            doFetch('/join', {}, function(data) {
+            let data = {
+                weaponLevel: document.getElementById('weaponLevel').value,
+                engineLevel: document.getElementById('engineLevel').value,
+                shieldLevel: document.getElementById('shieldLevel').value,
+            };
+            doFetch('/join', data, function(data) {
                 document.getElementById('robot_id').value = data.robot_id;
                 document.getElementById('x').value = data.x;
                 document.getElementById('y').value = data.y;
@@ -67,6 +72,10 @@
 </head>
 <body>
 
+    Weapon level <input type="text" value="1" id="weaponLevel"><br>
+    Engine level <input type="text" value="1" id="engineLevel"><br>
+    Shield level <input type="text" value="0" id="shieldLevel"><br><br>
+    
     Robot id <input type="text" value="0" id="robot_id"><br>
     y <input type="text" value="0" id="x"><br>
     x <input type="text" value="0" id="y"><br>
