@@ -5,30 +5,6 @@ import (
 	"math"
 )
 
-// Robots
-var robots []*Robot
-
-// Robot object.
-type Robot struct {
-	RobotID     int `json:"robot_id"`
-	Health      int `json:"health"`
-	MaxHealth   int `json:"max_health"`
-	Capacity    int `json:"capacity"`
-	MaxCapacity int `json:"max_capacity"`
-	X           int `json:"x"`
-	Y           int `json:"y"`
-	MaxMoves    int `json:"max_moves"`
-	Moves       int `json:"moves"`
-	WeaponRange int `json:"weapon_range"`
-	WeaponPower int `json:"weapon_power"`
-	WeaponAmmo  int `json:"weapon_ammo"`
-}
-
-// Radar object.
-type Radar struct {
-	Range int
-}
-
 // Scan returns arena.
 func Scan() [ArenaSize][ArenaSize]Cell {
 
