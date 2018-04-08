@@ -1,8 +1,17 @@
-## Build
+# RESTFight web app
+
+Web backend for the game.
+
+## Build & run
 
 `go build && ./main`
 
-## Debugging
+## Viewer
 
-* Open viewer http://127.0.0.1:8000/viewer/
-* Open debugger http://127.0.0.1:8000/viewer/remote.html
+View game:  
+http://127.0.0.1:8000/viewer/
+
+## Debugging tool
+
+Simulate API calls with this handy tool: 
+http://127.0.0.1:8000/viewer/remote.html
