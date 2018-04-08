@@ -7,6 +7,8 @@ $color-cell: #4D4D50;
 $color-obstacle: rgb(146, 146, 153);
 $color-explosion: rgb(252, 0, 0);
 $color-robot: #C5A639;
+$color-white: #fff;
+$color-almost-white: rgb(189, 189, 189);
 
 body {
   background: $color-background;
@@ -32,7 +34,10 @@ body {
 }
 
 .game {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 10 * $cell-size;
   height: 10 * $cell-size;
   .arena {
@@ -70,10 +75,37 @@ body {
   margin-left: 20px;
 }
 
-.robots-legend {
+.robot-legend {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+  width: 10rem;
+  &--one {
+    left: 1rem;
+  }
+  &--two {
+    right: 1rem;
+  }
+  &__title {
+    font-weight: 700;
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  &__meta-key {
+    clear: both;
+    float: left;
+    width: 70%;
+    color: $color-almost-white;
+  }
+  &__meta-value {
+    float: left;
+    width: 30%;
+    text-align: right;
+    color: $color-almost-white;
+  }
+
 }
 
 .blink {

@@ -10,8 +10,8 @@ import (
 func CreateRobot(engineLevel int, shieldLevel int, weaponLevel int) (Robot, error) {
 
 	var robot = Robot{
-		Health:      0,
-		MaxHealth:   0,
+		Health:      10,
+		MaxHealth:   10,
 		Capacity:    0,
 		MaxCapacity: 10,
 		X:           0,

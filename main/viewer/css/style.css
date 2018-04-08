@@ -21,7 +21,10 @@ body {
   display: block; }
 
 .game {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 400px;
   height: 400px; }
   .game .arena {
@@ -52,10 +55,31 @@ body {
 .console {
   margin-left: 20px; }
 
-.robots-legend {
+.robot-legend {
   position: absolute;
-  top: 1rem;
-  right: 1rem; }
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+  width: 10rem; }
+  .robot-legend--one {
+    left: 1rem; }
+  .robot-legend--two {
+    right: 1rem; }
+  .robot-legend__title {
+    font-weight: 700;
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem; }
+  .robot-legend__meta-key {
+    clear: both;
+    float: left;
+    width: 70%;
+    color: #bdbdbd; }
+  .robot-legend__meta-value {
+    float: left;
+    width: 30%;
+    text-align: right;
+    color: #bdbdbd; }
 
 .blink {
   animation: blink-animation 0.2s steps(5, start) 5; }

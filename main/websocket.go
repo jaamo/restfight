@@ -51,6 +51,8 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	connections = append(connections, conn)
 
+	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
+
 	// go echo(conn)
 
 }

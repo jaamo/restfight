@@ -158,15 +158,15 @@ function updateRobotsLegend(robots) {
   if (!robots) {
     return;
   }
-
-  let legend = document.querySelector('.robots-legend');
-  legend.innerHTML = '';
-  robots.forEach((robot) => {
-    legend.innerHTML += 'id: ' + robot.robot_id + '<br>';
-    legend.innerHTML += 'health: ' + robot.health + '<br>';
-    legend.innerHTML += 'x: ' + robot.x + '<br>';
-    legend.innerHTML += 'y: ' + robot.y + '<br>';
-    legend.innerHTML += '<br>';
+  robots.forEach((robot, i) => {
+    document.querySelector('.js-robot'+i+'-title').innerHTML = 'robot' + i;
+    document.querySelector('.js-robot'+i+'-x').innerHTML = robot.x;
+    document.querySelector('.js-robot'+i+'-y').innerHTML = robot.y;
+    document.querySelector('.js-robot'+i+'-health').innerHTML = robot.health;
+    document.querySelector('.js-robot'+i+'-max-health').innerHTML = robot.max_health;
+    document.querySelector('.js-robot'+i+'-max-moves').innerHTML = robot.max_moves;
+    document.querySelector('.js-robot'+i+'-weapon-range').innerHTML = robot.weapon_range;
+    document.querySelector('.js-robot'+i+'-weapon-power').innerHTML = robot.weapon_power;
   })
 
 }
