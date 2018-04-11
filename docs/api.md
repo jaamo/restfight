@@ -1,26 +1,34 @@
-# JSON schemas
+# API documentation
 
-## Robot
+## Robot JSON schema
 JSON schema for a robot. Used in various responses.
 
 ### Properties
 
-- robot_id: 1 (string) - Player's id.
-- health: 10 (number) - Robot's health.
-- x: 10 (number) - X-position.
-- y: 10 (number) - Y-position.
-- max_health: 10 (string) - Robot's max health.
-- capacity: 2 (number) - Capacity used.
-- max_capacity: 10 (number) - Max capacity used.
-- radar: {range:3} (object) - Radar.
+- robot_id (string) - Player's id.
+- robot_index (number) - Player's index.
+- shield_level (number) - Shield level (0-2).
+- health (number) - Robot's health.
+- max_health (string) - Robot's max health.
+- capacity (number) - Capacity used.
+- max_capacity (number) - Max capacity used.
+- x (number) - X-position.
+- y (number) - Y-position.
+- engine_level (number) - Shield level (0-2).
+- max_moves (number) - Maximum amount of moves.
+- moves (number) - Moves left on this round.
+- weapon_level (number) - Weapon level (0-2).
+- weapon_range (number) - Weapon range.
+- weapon_power (number) - Weapon power (amount of health it reduces after hit).
+- weapon_ammo (number) - Ammo left on ongoing rund.
 
-# REST endpoints
+## REST endpoints
 
 Available REST API endpoints.
 
+* [General](#join-a-game)
+* [New game](#join-a-game)
 * [Join a game](#join-a-game)
-* [Add a feature to robot](#add-a-feature-to-robot)
-* [Finish deployment](#finish-deployment)
 * [Start turn](#start-turn)
 * [Radar scan](#radar-scan)
 * [Movement](#movement)
@@ -30,156 +38,53 @@ Available REST API endpoints.
 
 
 
+- - - -
+
+### General
+
+* Method is always `GET`
+* No authorization required
+* Success HTTP code is 200
+* Error HTTP code is 400 CLIENT ERROR
+* In case of error JSON is returned: `{ error: "ERROR_CODE", message: "Potential error message"}`
+
+
+
+
+
+- - - -
+
+### New game
+
+Resets the current game and starts a new game. Handy functions if it seems that your robot will lose :)
+
+**URL:** `/new`
+
+
+
+
 
 - - - -
 
 ## Join a game
 
-Join the game. 
+Join the game. Returns a robot.
 
-**URL** : `/api/join`
+**URL:** `/join`
 
-**Method** : `GET`
+**Parameters:**
+- engineLevel: Engine level, 0-2
+- shieldLevel: Shield level, 0-2
+- weaponLevel: Weapon level, 0-2
 
-**Auth required** : NO
+**Response:** Robot object.
 
-### Success Response
+**Errors:**
 
-**Code** : `200 OK`
-
-**Content example**
-
-```json
-{
-    "game_id": "123456",
-    "robot_id": "123456"
-}
-```
-
-### Error Response
-
-**Code** : `400 CLIENT ERROR`
-
-**Content** :
-
-```json
-{
-    "error": "GAME_FULL",
-    "message": "Description."
-}
-```
-
-**Errors**
-
-| Key        | Reason                       |
+| Code       | Reason                       |
 |------------|------------------------------|
 | GAME_FULL  | No game available.           |
 | ERROR      | Generic error.               |
-
-
-
-
-
-- - - -
-
-## Add a feature to robot
-
-Add a single feature (radar, shield, engine or weapon) to a robot. One feature type can be added only once. If feature already exists the existing will be deleted.
-
-**URL** : `/api/{GAME ID}/{ROBOT ID}/feature/add`
-
-**Method** : `POST`
-
-**Auth required** : NO
-
-**Data constraints**
-
-```json
-{
-    "feature": "[feature name: radar, shield, engine, weapon]",
-    "type": "[feature type]"
-}
-```
-
-**Data example**
-
-```json
-{
-    "username": "engine",
-    "password": "engine1"
-}
-```
-
-### Success Response
-
-**Code** : `200 OK`
-
-**Content example**
-
-Robot object.
-
-### Error Response
-
-**Code** : `400 CLIENT ERROR`
-
-**Content** :
-
-```json
-{
-    "error": "OUT_OF_CAPACITY",
-    "message": "Description."
-}
-```
-
-**Errors**
-
-| Key              | Reason                       |
-|------------------|------------------------------|
-| OUT_OF_CAPACITY  | Robot's capacity exceeded.   |
-| ERROR            | Generic error.               |
-
-
-
-
-
-- - - -
-
-## Finish deployment
-
-This enpoint is called when robot deployment is finished.
-
-**URL** : `/api/{GAME ID}/{ROBOT ID}/feature/end`
-
-**Method** : `GET`
-
-**Auth required** : NO
-
-### Success Response
-
-**Code** : `200 OK`
-
-**Content example**
-
-Robot object.
-
-### Error Response
-
-**Code** : `400 CLIENT ERROR`
-
-**Content** :
-
-```json
-{
-    "error": "ERROR",
-    "message": "Description."
-}
-```
-
-**Errors**
-
-| Key              | Reason                       |
-|------------------|------------------------------|
-| ERROR            | Generic error.               |
 
 
 
@@ -191,15 +96,7 @@ Robot object.
 
 This endpoint returns a status of the game. This should be polled while waiting for own turn.
 
-**URL** : `/api/{GAME ID}/{ROBOT ID}/status`
-
-**Method** : `GET`
-
-**Auth required** : NO
-
-### Success Response
-
-**Code** : `200 OK`
+**URL** : `/status`
 
 **Content example**
 
@@ -211,25 +108,12 @@ This endpoint returns a status of the game. This should be polled while waiting 
 }
 ```
 
-### Error Response
-
-**Code** : `400 CLIENT ERROR`
-
-**Content** :
-
-```json
-{
-    "error": "ERROR",
-    "message": "Description."
-}
-```
-
 **Errors**
 
 | Key               | Reason                       |
 |-------------------|------------------------------|
 | ERROR             | Generic error.               |
-| ROBOT_NOT_EXISTS | Given robot doesn't exists  |
+| ROBOT_NOT_EXISTS  | Given robot doesn't exists  |
 | GAME_NOT_EXISTS   | Given game doesn't exists    |
 
 

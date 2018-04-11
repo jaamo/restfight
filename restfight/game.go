@@ -64,6 +64,7 @@ func JoinGame(engineLevel int, shieldLevel int, weaponLevel int) (Robot, error) 
 	robot.RobotID = generateKey(len(robots), 100)
 	robot.X = x
 	robot.Y = y
+	robot.RobotIndex = len(robots)
 	robots = append(robots, &robot)
 
 	// Two players joined, set turn.

@@ -11,6 +11,7 @@ type Cell struct {
 // Robot object.
 type Robot struct {
 	RobotID     int `json:"robot_id"`
+	RobotIndex  int `json:"robot_index"`
 	ShieldLevel int `json:"shield_level"`
 	Health      int `json:"health"`
 	MaxHealth   int `json:"max_health"`
