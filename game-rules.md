@@ -2,7 +2,7 @@
 
 ## Game area
 
-Robots are fighting in a 100 x 100 grid. Each cell can contain:
+Robots are fighting in a 10 x 10 grid. Each cell can contain:
 
 - Nothing
 - An obstable (like wall, tree etc.)

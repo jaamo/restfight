@@ -219,6 +219,8 @@ func Shoot(robotIndex int, x int, y int) error {
 	}
 
 	// Update game status.
+	// TODO: From architecture perspective this is not the best location to update status.
+	// This should happen outside this function.
 	updateStatus()
 
 	return nil
