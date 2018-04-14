@@ -171,7 +171,7 @@ func TestShoot(t *testing.T) {
 	}
 
 	forceMoveRobot(robots[1], 2, 2)
-	GetStatus()
+	// GetStatus(-1)
 
 	// Should run out of ammo.
 	err = Shoot(0, 1, 1)

@@ -20,8 +20,18 @@ type gameAPIError struct {
 
 // apiGetStatus return complete game status.
 func apiGetStatus(w http.ResponseWriter, r *http.Request) {
-	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
-	json.NewEncoder(w).Encode(restfight.GetStatus())
+
+	robotIndex := -1
+
+	robotIDParam, ok := r.URL.Query()["robot_id"]
+	if ok || len(robotIDParam) > 0 {
+		robotID, _ := strconv.Atoi(robotIDParam[0])
+		robotIndex, _ = restfight.GetRobotIndexByID(robotID)
+	}
+
+	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus(-1)})
+	json.NewEncoder(w).Encode(restfight.GetStatus(robotIndex))
+
 }
 
 // apiJoinGame registers a new player.
@@ -59,7 +69,7 @@ func apiJoinGame(w http.ResponseWriter, r *http.Request) {
 		apiError(w, error.Error(), "")
 	} else {
 		broadcastEvent(GameEvent{EventType: "JOIN_GAME", Robot: robot})
-		broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
+		broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus(robot.RobotIndex)})
 		json.NewEncoder(w).Encode(robot)
 	}
 }
@@ -72,7 +82,7 @@ func apiEchoDebug(w http.ResponseWriter, r *http.Request) {
 // apiEchoDebug resets the game
 func apiNewGame(w http.ResponseWriter, r *http.Request) {
 	restfight.NewGame()
-	json.NewEncoder(w).Encode(restfight.GetStatus())
+	json.NewEncoder(w).Encode(restfight.GetStatus(-1))
 	broadcastEvent(GameEvent{EventType: "NEW_GAME"})
 }
 
@@ -157,8 +167,8 @@ func apiShoot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	broadcastEvent(GameEvent{EventType: "SHOOT", X: x, Y: y})
-	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
-	json.NewEncoder(w).Encode(restfight.GetStatus())
+	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus(robotIndex)})
+	json.NewEncoder(w).Encode(restfight.GetStatus(robotIndex))
 
 }
 

@@ -47,12 +47,19 @@ type Status struct {
 	// Active robot. 0 or 1.
 	ActiveRobot int `json:"active_robot"`
 
+	// Is your turn. 0 or 1.
+	IsYourTurn int `json:"is_your_turn"`
+
+	// Player's own robot.
+	Robot *Robot `json:"robot"`
+
+	// List of enemies.
+	Enemies []*Robot `json:"enemies"`
+
+	// All robots.
 	Robots *[]*Robot `json:"robots"`
 
 	Arena *[ArenaSize][ArenaSize]Cell `json:"arena"`
-
-	// Active robot status. 0 = waiting, 1 = turn started
-	ActiveRobotStatus ActiveRobotStatus `json:"active_robot_status"`
 }
 
 /**

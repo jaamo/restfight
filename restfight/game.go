@@ -2,6 +2,7 @@ package restfight
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 )
 
@@ -19,12 +20,11 @@ func NewGame() {
 
 	// Init game status
 	status = Status{
-		GameID:            generateKey(1, 100),
-		Status:            GameStatusWaitingForPlayers,
-		ActiveRobot:       0,
-		ActiveRobotStatus: ActiveRobotStatusWaiting,
-		Robots:            &robots,
-		Arena:             &arena,
+		GameID:      generateKey(1, 100),
+		Status:      GameStatusWaitingForPlayers,
+		ActiveRobot: 0,
+		Arena:       &arena,
+		Robots:      &robots,
 	}
 
 	// Reset turn.
@@ -99,7 +99,7 @@ func ToggleTurn() {
 }
 
 // GetStatus is only debugging atm.
-func GetStatus() Status {
+func GetStatus(robotIndex int) Status {
 
 	//var arena [ArenaSize][ArenaSize]Cell
 
@@ -110,7 +110,28 @@ func GetStatus() Status {
 		}
 		output += "\n"
 	}
-	// fmt.Println(output)
+
+	status.Robot = nil
+	status.Enemies = nil
+
+	// No robot defined so skip the rest.
+	if robotIndex < 0 {
+		return status
+	}
+
+	// Get players robot.
+	fmt.Println("MOIKKA")
+	fmt.Println(robotIndex)
+	if len(robots) > 0 && robotIndex < len(robots) {
+		status.Robot = robots[robotIndex]
+	}
+
+	// Add enemy robot to list.
+	if len(robots) > 1 {
+		var enemies []*Robot
+		enemies = append(enemies, robots[(robotIndex+1%2)])
+		status.Enemies = enemies
+	}
 
 	return status
 }
