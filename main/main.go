@@ -146,7 +146,7 @@ func apiShoot(w http.ResponseWriter, r *http.Request) {
 
 	broadcastEvent(GameEvent{EventType: "SHOOT", X: x, Y: y})
 	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus()})
-	json.NewEncoder(w).Encode(GameEvent{X: x, Y: y})
+	json.NewEncoder(w).Encode(restfight.GetStatus())
 
 }
 
