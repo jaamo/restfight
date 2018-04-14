@@ -29,18 +29,21 @@ func apiJoinGame(w http.ResponseWriter, r *http.Request) {
 
 	engineLevelParam, ok := r.URL.Query()["engineLevel"]
 	if !ok || len(engineLevelParam) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter engineLevel missing."})
 		return
 	}
 
 	shieldLevelParam, ok := r.URL.Query()["shieldLevel"]
 	if !ok || len(shieldLevelParam) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter shieldLevel missing."})
 		return
 	}
 
 	weaponLevelParam, ok := r.URL.Query()["weaponLevel"]
 	if !ok || len(weaponLevelParam) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter weaponLevel missing."})
 		return
 	}
@@ -52,6 +55,7 @@ func apiJoinGame(w http.ResponseWriter, r *http.Request) {
 	robot, error := restfight.JoinGame(engineLevel, shieldLevel, weaponLevel)
 
 	if error != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		apiError(w, error.Error(), "")
 	} else {
 		broadcastEvent(GameEvent{EventType: "JOIN_GAME", Robot: robot})
@@ -77,18 +81,21 @@ func apiMove(w http.ResponseWriter, r *http.Request) {
 
 	xParams, ok := r.URL.Query()["x"]
 	if !ok || len(xParams) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter x missing."})
 		return
 	}
 
 	yParams, ok := r.URL.Query()["y"]
 	if !ok || len(yParams) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter y missing."})
 		return
 	}
 
 	robotIDParam, ok := r.URL.Query()["robot_id"]
 	if !ok || len(robotIDParam) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter robot_id missing."})
 		return
 	}
@@ -102,6 +109,7 @@ func apiMove(w http.ResponseWriter, r *http.Request) {
 	robot, err := restfight.MoveRobot(robotIndex, x, y)
 
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: fmt.Sprintf("You tried move robot %d (index %d) to  %d x %d.", robotID, robotIndex, x, y)})
 		return
 	}
@@ -115,18 +123,21 @@ func apiShoot(w http.ResponseWriter, r *http.Request) {
 
 	xParams, ok := r.URL.Query()["x"]
 	if !ok || len(xParams) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter x missing."})
 		return
 	}
 
 	yParams, ok := r.URL.Query()["y"]
 	if !ok || len(yParams) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter y missing."})
 		return
 	}
 
 	robotIDParam, ok := r.URL.Query()["robot_id"]
 	if !ok || len(robotIDParam) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter robot_id missing."})
 		return
 	}
@@ -140,6 +151,7 @@ func apiShoot(w http.ResponseWriter, r *http.Request) {
 	err := restfight.Shoot(robotIndex, x, y)
 
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: err.Error(), Message: fmt.Sprintf("You tried to shoot to %d x %d.", x, y)})
 		return
 	}
@@ -155,6 +167,7 @@ func apiEndTurn(w http.ResponseWriter, r *http.Request) {
 
 	robotIDParam, ok := r.URL.Query()["robot_id"]
 	if !ok || len(robotIDParam) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "PARAMETER_MISSING", Message: "Parameter robot_id missing."})
 		return
 	}
@@ -166,6 +179,7 @@ func apiEndTurn(w http.ResponseWriter, r *http.Request) {
 		restfight.ToggleTurn()
 		broadcastEvent(GameEvent{EventType: "NEW_TURN"})
 	} else {
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "NOT_YOUR_TURN", Message: "Not your turn."})
 	}
 
