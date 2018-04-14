@@ -93,7 +93,7 @@ func ToggleTurn() {
 	// Reset ammo and moves.
 	for i := 0; i < len(robots); i++ {
 		robots[i].WeaponAmmo = 1
-		robots[i].Moves = 0
+		robots[i].Moves = robots[i].MaxMoves
 	}
 
 }

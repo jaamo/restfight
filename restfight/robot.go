@@ -52,6 +52,7 @@ func CreateRobot(engineLevel int, shieldLevel int, weaponLevel int) (Robot, erro
 		robot.Capacity += 6
 		robot.MaxMoves = 6
 	}
+	robot.Moves = robot.MaxMoves
 
 	// Setup shield.
 	if shieldLevel == 0 {
@@ -126,7 +127,7 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 	robot = robots[robotIndex]
 
 	// Check moves left.
-	if robot.Moves >= robot.MaxMoves {
+	if robot.Moves <= 0 {
 		return robot, errors.New("OUT_OF_MOVES")
 	}
 
@@ -151,7 +152,7 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 	}
 
 	// Increase move counter.
-	robot.Moves++
+	robot.Moves--
 
 	// Move.
 	forceMoveRobot(robot, x, y)

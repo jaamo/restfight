@@ -124,7 +124,7 @@ func TestMoveRobot(t *testing.T) {
 	}
 
 	// Collision
-	robot.Moves = 0
+	robot.Moves = robot.MaxMoves
 	forceMoveRobot(robots[0], 0, 0)
 	forceMoveRobot(robots[1], 0, 1)
 	// GetStatus()
