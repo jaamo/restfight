@@ -2,7 +2,6 @@ package restfight
 
 import (
 	"errors"
-	"fmt"
 	"math"
 )
 
@@ -12,7 +11,7 @@ func CreateRobot(engineLevel int, shieldLevel int, weaponLevel int) (Robot, erro
 	var robot = Robot{
 		Health:      10,
 		MaxHealth:   10,
-		Capacity:    0,
+		Capacity:    10,
 		MaxCapacity: 10,
 		X:           0,
 		Y:           0,
@@ -41,54 +40,54 @@ func CreateRobot(engineLevel int, shieldLevel int, weaponLevel int) (Robot, erro
 
 	// Setup engine.
 	if engineLevel == 0 {
-		robot.Capacity += 2
+		robot.Capacity -= 2
 		robot.MaxMoves = 2
 	}
 	if engineLevel == 1 {
-		robot.Capacity += 4
+		robot.Capacity -= 4
 		robot.MaxMoves = 4
 	}
 	if engineLevel == 2 {
-		robot.Capacity += 6
+		robot.Capacity -= 6
 		robot.MaxMoves = 6
 	}
 	robot.Moves = robot.MaxMoves
 
 	// Setup shield.
 	if shieldLevel == 0 {
-		robot.Capacity += 2
+		robot.Capacity -= 2
 		robot.MaxHealth = 6
 	}
 	if shieldLevel == 1 {
-		robot.Capacity += 4
+		robot.Capacity -= 4
 		robot.MaxHealth = 10
 	}
 	if shieldLevel == 2 {
-		robot.Capacity += 6
+		robot.Capacity -= 6
 		robot.MaxHealth = 14
 	}
 	robot.Health = robot.MaxHealth
 
 	// Setup weapon.
 	if weaponLevel == 0 {
-		robot.Capacity += 2
+		robot.Capacity -= 2
 		robot.WeaponRange = 2
 		robot.WeaponPower = 2
 	}
 	if weaponLevel == 1 {
-		robot.Capacity += 4
+		robot.Capacity -= 4
 		robot.WeaponRange = 4
 		robot.WeaponPower = 4
 	}
 	if weaponLevel == 2 {
-		robot.Capacity += 6
+		robot.Capacity -= 6
 		robot.WeaponRange = 6
 		robot.WeaponPower = 6
 	}
 
 	// Check capacity.
-	if robot.Capacity > 10 {
-		fmt.Printf("Robot capacity exceed: %d\n", robot.Capacity)
+	if robot.Capacity < 0 {
+		// fmt.Printf("Robot capacity exceed: %d\n", robot.Capacity)
 		return robot, errors.New("ROBOT_CAPACITY_EXCEED")
 	}
 

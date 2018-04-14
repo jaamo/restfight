@@ -21,6 +21,45 @@ func TestGetRobotIndexByID(t *testing.T) {
 	}
 
 }
+func TestJoinGame(t *testing.T) {
+
+	var err error
+
+	NewGame()
+	var robot, _ = JoinGame(0, 0, 0)
+	if robot.MaxCapacity != 10 {
+		t.Errorf("Robot max capacity should be 10. Was %d.", robot.MaxCapacity)
+	}
+	if robot.Capacity != 4 {
+		t.Errorf("Robot max capacity should be 4. Was %d.", robot.Capacity)
+	}
+
+	NewGame()
+	robot, _ = JoinGame(1, 0, 0)
+	if robot.Capacity != 2 {
+		t.Errorf("Robot max capacity should be 4. Was %d.", robot.Capacity)
+	}
+
+	NewGame()
+	robot, _ = JoinGame(0, 1, 0)
+	if robot.Capacity != 2 {
+		t.Errorf("Robot max capacity should be 4. Was %d.", robot.Capacity)
+	}
+
+	NewGame()
+	robot, _ = JoinGame(0, 0, 1)
+	if robot.Capacity != 2 {
+		t.Errorf("Robot max capacity should be 4. Was %d.", robot.Capacity)
+	}
+
+	NewGame()
+	robot, err = JoinGame(1, 1, 1)
+	if err == nil || err.Error() != "ROBOT_CAPACITY_EXCEED" {
+		t.Errorf("Was expecting error ROBOT_CAPACITY_EXCEED on index 0, got %s", err)
+	}
+
+}
+
 func TestMoveRobot(t *testing.T) {
 
 	NewGame()
