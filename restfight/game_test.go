@@ -121,22 +121,22 @@ func TestNewGameLimitRobots(t *testing.T) {
 
 }
 
-func TestKeyGeneration(t *testing.T) {
-	len := 100
-	key := generateKey(1, len)
-	if key < len {
-		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 100 - 199", key)
-	}
-	if key > 199 {
-		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 100 - 199", key)
-	}
+// func TestKeyGeneration(t *testing.T) {
+// 	len := 100
+// 	key := generateKey(1, len)
+// 	if key < len {
+// 		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 100 - 199", key)
+// 	}
+// 	if key > 199 {
+// 		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 100 - 199", key)
+// 	}
 
-	key = generateKey(2, len)
-	if key < 2*len {
-		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 200 - 299", key)
-	}
-	if key > 299 {
-		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 200 - 299", key)
-	}
+// 	key = generateKey(2, len)
+// 	if key < 2*len {
+// 		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 200 - 299", key)
+// 	}
+// 	if key > 299 {
+// 		t.Errorf("Generated key %d is not what expected. Key was expected to start with 1 and be between 200 - 299", key)
+// 	}
 
-}
+// }

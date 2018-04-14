@@ -2,7 +2,6 @@ package restfight
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 )
 
@@ -120,8 +119,6 @@ func GetStatus(robotIndex int) Status {
 	}
 
 	// Get players robot.
-	fmt.Println("MOIKKA")
-	fmt.Println(robotIndex)
 	if len(robots) > 0 && robotIndex < len(robots) {
 		status.Robot = robots[robotIndex]
 	}

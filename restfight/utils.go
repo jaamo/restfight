@@ -1,8 +1,12 @@
 package restfight
 
-import "math/rand"
+import (
+	"time"
+)
 
 // Generate key.
 func generateKey(base int, length int) int {
-	return base*length + rand.Intn(length/10)
+
+	return int(time.Now().UnixNano())
+
 }
