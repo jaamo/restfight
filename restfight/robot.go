@@ -20,7 +20,7 @@ func CreateRobot(engineLevel int, shieldLevel int, weaponLevel int) (Robot, erro
 		Moves:       0,
 		WeaponRange: 0,
 		WeaponPower: 0,
-		WeaponAmmo:  0,
+		WeaponAmmo:  1,
 	}
 
 	// Parameter validation.

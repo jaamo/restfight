@@ -2,7 +2,6 @@ package restfight
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 )
 
@@ -111,7 +110,7 @@ func GetStatus() Status {
 		}
 		output += "\n"
 	}
-	fmt.Println(output)
+	// fmt.Println(output)
 
 	return status
 }

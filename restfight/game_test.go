@@ -5,8 +5,8 @@ import "testing"
 func TestCanPlay(t *testing.T) {
 
 	NewGame()
-	JoinGame()
-	JoinGame()
+	JoinGame(1, 1, 0)
+	JoinGame(1, 1, 0)
 
 	if CanPlay(0) == false {
 		t.Errorf("New game. Player 0 should be active.")
@@ -30,8 +30,8 @@ func TestCanPlay(t *testing.T) {
 func TestToggleTurn(t *testing.T) {
 
 	NewGame()
-	JoinGame()
-	JoinGame()
+	JoinGame(1, 1, 0)
+	JoinGame(1, 1, 0)
 
 	if status.ActiveRobot != 0 {
 		t.Errorf("New game. Turn should be 0.")
@@ -67,8 +67,8 @@ func TestNewGameArenaSize(t *testing.T) {
 func TesJoinGameHasRobots(t *testing.T) {
 
 	NewGame()
-	JoinGame()
-	JoinGame()
+	JoinGame(1, 1, 0)
+	JoinGame(1, 1, 0)
 
 	numberOfRobots := 0
 	for x := 0; x < ArenaSize; x++ {
@@ -87,8 +87,8 @@ func TesJoinGameHasRobots(t *testing.T) {
 func TestNewGameRobotsAreOk(t *testing.T) {
 
 	NewGame()
-	JoinGame()
-	JoinGame()
+	JoinGame(1, 1, 0)
+	JoinGame(1, 1, 0)
 
 	if robots[0].X != 0 || robots[0].Y != 0 {
 		t.Errorf("Robot 1 position is incorrect. Found %d x %d, expected 0 x 0.", robots[0].X, robots[0].Y)
@@ -104,17 +104,17 @@ func TestNewGameLimitRobots(t *testing.T) {
 
 	NewGame()
 
-	_, error := JoinGame()
+	_, error := JoinGame(1, 1, 0)
 	if error != nil {
 		t.Errorf("Tried to add the first robot but got an error: %s.", error)
 	}
 
-	_, error = JoinGame()
+	_, error = JoinGame(1, 1, 0)
 	if error != nil {
 		t.Errorf("Tried to add a second robot but got an error: %s.", error)
 	}
 
-	_, error = JoinGame()
+	_, error = JoinGame(1, 1, 0)
 	if error == nil {
 		t.Errorf("Game was supposed to be full but it wasn't.")
 	}

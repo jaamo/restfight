@@ -8,13 +8,13 @@ func TestGetRobotIndexByID(t *testing.T) {
 
 	NewGame()
 
-	var robot, _ = JoinGame()
+	var robot, _ = JoinGame(1, 1, 0)
 	robotIndex, _ := GetRobotIndexByID(robot.RobotID)
 	if robotIndex != 0 {
 		t.Errorf("The first robot should have index 0. Got %d.", robotIndex)
 	}
 
-	var robot2, _ = JoinGame()
+	var robot2, _ = JoinGame(1, 1, 0)
 	robotIndex2, _ := GetRobotIndexByID(robot2.RobotID)
 	if robotIndex2 != 1 {
 		t.Errorf("The second robot should have index 1. Got %d.", robotIndex)
@@ -41,7 +41,7 @@ func TestMoveRobot(t *testing.T) {
 	}
 
 	// Add robot. Should be only one.
-	JoinGame()
+	JoinGame(1, 1, 0)
 	_, err = MoveRobot(1, 0, 0)
 	if err == nil || err.Error() != "ROBOT_NOT_FOUND" {
 		t.Errorf("Was expecting error ROBOT_NOT_FOUND, got %s", err)
@@ -52,7 +52,7 @@ func TestMoveRobot(t *testing.T) {
 		t.Errorf("Turn should be -1, was %d", status.ActiveRobot)
 	}
 
-	JoinGame()
+	JoinGame(1, 1, 0)
 
 	// Turn should be 0.
 	if status.ActiveRobot != 0 {
@@ -107,9 +107,10 @@ func TestMoveRobot(t *testing.T) {
 	// Two more moves.
 	robot, err = MoveRobot(0, 0, 2)
 	robot, err = MoveRobot(0, 0, 3)
+	robot, err = MoveRobot(0, 0, 4)
 
 	// Should be out of moves now.
-	robot, err = MoveRobot(0, 0, 4)
+	robot, err = MoveRobot(0, 0, 5)
 	if err == nil || err.Error() != "OUT_OF_MOVES" {
 		t.Errorf("Was expecting error OUT_OF_MOVES, got %s", err)
 	}
@@ -117,7 +118,7 @@ func TestMoveRobot(t *testing.T) {
 	// New turn. Should be able to move again.
 	ToggleTurn()
 	ToggleTurn()
-	robot, err = MoveRobot(0, 0, 4)
+	robot, err = MoveRobot(0, 0, 5)
 	if err != nil {
 		t.Errorf("Wasn't expecting errors, got %s", err)
 	}
@@ -137,8 +138,8 @@ func TestMoveRobot(t *testing.T) {
 func TestShoot(t *testing.T) {
 
 	NewGame()
-	JoinGame()
-	JoinGame()
+	JoinGame(1, 1, 0)
+	JoinGame(1, 1, 0)
 
 	var err error
 
@@ -189,30 +190,3 @@ func TestShoot(t *testing.T) {
 	}
 
 }
-
-// func TestScan(t *testing.T) {
-
-// 	NewGame()
-// 	JoinGame()
-// 	JoinGame()
-
-// 	// Do scan on the top left corner.
-// 	s, _ := Scan(robots[0])
-
-// 	if len(s) != 4 {
-// 		t.Errorf("Too many scan results: %d. Was expecting 4.", len(s))
-// 	}
-
-// 	if s[0].Type != ArenaTypeRobot {
-// 		t.Errorf("Expected robot on 0 x 0. Got %d.", s[0].Type)
-// 	}
-
-// 	// Move another robot to range.
-// 	forceMoveRobot(&robots[1], 0, 1)
-// 	s, _ = Scan(robots[0])
-
-// 	if s[1].Type != ArenaTypeRobot {
-// 		t.Errorf("Expected robot on 1 x 0. Got %d.", s[1].Type)
-// 	}
-
-// }
