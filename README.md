@@ -9,11 +9,14 @@ Robots can move around and shoot their opponents. There are also obstacles on th
 ![Screenshot](screenshot.png)
 
 
-## Available documentation
+## Documentation
 
-* [Game rules (outdated!)](game-rules.md)
+* [Game rules](game-rules.md)
 * [API documentation (swagger.io)](https://app.swaggerhub.com/apis/jaamo/RESTFight/1.0.0)
 * [Node based example robot](example-robot/README.md)
+
+## Developer documentation
+
 * [Game module documentation](restfight/README.md)
 * [Web server documentation](main/README.md)
 

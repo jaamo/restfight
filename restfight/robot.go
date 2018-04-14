@@ -56,15 +56,15 @@ func CreateRobot(engineLevel int, shieldLevel int, weaponLevel int) (Robot, erro
 	// Setup shield.
 	if shieldLevel == 0 {
 		robot.Capacity += 2
-		robot.WeaponAmmo = 2
+		robot.MaxHealth = 6
 	}
 	if shieldLevel == 1 {
 		robot.Capacity += 4
-		robot.MaxHealth = 4
+		robot.MaxHealth = 10
 	}
 	if shieldLevel == 2 {
 		robot.Capacity += 6
-		robot.MaxHealth = 6
+		robot.MaxHealth = 14
 	}
 	robot.Health = robot.MaxHealth
 
