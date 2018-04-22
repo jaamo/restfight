@@ -9,3 +9,8 @@ Example robot written in node.
 ## Running
 
 `node index.js`
+
+## Generating documentation:
+
+1. Install Docco `npm install -g docco`
+2. Run Docco `docco index.js`

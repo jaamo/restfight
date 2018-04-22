@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Example RESTFight robot</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="example-restfight-robot">Example RESTFight robot</h1>
+<p>This is an example robot for RESTFight game:
+<a href="https://github.com/jaamo/restfight">https://github.com/jaamo/restfight</a></p>
+<p>This example is very simple and it’s made just to show how the game works.</p>
+<p>The robot flow has these steps:</p>
+<ul>
+<li>Call <code>/join</code> to join the game.</li>
+<li>Poll <code>/status</code> until it’s our turn.</li>
+<li>Play our turn.</li>
+<li>Call <code>/endturn</code> and jump to back to three.</li>
+</ul>
+<p>The actual AI part (<code>playTurn</code> function) has the following logic:</p>
+<ul>
+<li>If out of ammo or out of moves, end turn</li>
+<li>If evemy robot in range, shoot</li>
+<li>Move towards enemy robot</li>
+</ul>
+<p>But now let’s move to the fun part!</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Import some packages we need to make requests.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> fetch = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-fetch'</span>);
+<span class="hljs-keyword">const</span> querystring = <span class="hljs-built_in">require</span>(<span class="hljs-string">'querystring'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Base url pointing to our server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> baseUrl = <span class="hljs-string">'http://127.0.0.1:8000/'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Robots id. This is set after joining the game.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> robotId = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Game status object returned from the server.
+Check the model form API documentation:
+<a href="https://app.swaggerhub.com/apis/jaamo/RESTFight/1.0.0">https://app.swaggerhub.com/apis/jaamo/RESTFight/1.0.0</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> status = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>This function joins the game.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">joinGame</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>I have added some console debugging here and there.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Join game.'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Define our robot properties. Plese refer API docs &amp; game rules for more information.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> params = {
+        <span class="hljs-attr">engineLevel</span>: <span class="hljs-number">1</span>, 
+        <span class="hljs-attr">shieldLevel</span>: <span class="hljs-number">1</span>, 
+        <span class="hljs-attr">weaponLevel</span>: <span class="hljs-number">0</span>
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Now it’s time to make our first API call! We call <code>/join</code> endpoint with our parameters.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fetch(baseUrl + <span class="hljs-string">'join?'</span> + querystring.stringify(params)).then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+        response.json().then(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Robot object is returned as a response.
+We save only the ID at this point for future usage.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            robotId = json.robot_id;
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Joined to game. Robot id is '</span> + robotId);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Now we have joined the game and it’s to to start waiting for our turn.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            waitForTurn();
+
+        });
+    });    
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Now we just wait until it’s our turn.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">waitForTurn</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Wait for turn...'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Request game status. Remember to pass robot ID to get more meaningful response.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fetch(baseUrl + <span class="hljs-string">'status?'</span> + querystring.stringify({<span class="hljs-attr">robot_id</span>: robotId})).then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+        response.json().then(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Check if it’s your turn. If not, wait for 5 seconds and retry.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (json.is_your_turn == <span class="hljs-number">1</span>) {
+                getStatusAndPlayTurn();
+            } <span class="hljs-keyword">else</span> {
+                setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+                    waitForTurn();
+                }, <span class="hljs-number">5000</span>)
+            }
+
+        });
+    });
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Our main AI has two functions. This first one loads the game status so that we have the latest
+information for our decision making logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getStatusAndPlayTurn</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Get status.'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Call status as we did above.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fetch(baseUrl + <span class="hljs-string">'status?'</span> + querystring.stringify({<span class="hljs-attr">robot_id</span>: robotId})).then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+        response.json().then(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Save status.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            status = json;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Now run the actual decision making function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            playTurn();
+
+        });
+    });    
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>This function is the brains of the robot! Decisions are made here. 
+This function sequentially calls itself until there’s nothing to do and it’s time to end turn.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">playTurn</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Play turn.'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Save enemy to it’s own variable to keep the code cleaner.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> enemy = status.enemies[<span class="hljs-number">0</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>First we check if we are done.
+If we can’t move anymore or we are out of ammo we end our turn.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (status.robot.moves == <span class="hljs-number">0</span> || status.robot.weapon_ammo == <span class="hljs-number">0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Call end turn endpoint and then jump to waiting loop.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        fetch(baseUrl + <span class="hljs-string">'endturn?'</span> + querystring.stringify({<span class="hljs-attr">robot_id</span>: status.robot.robot_id})).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+            response.text().then(<span class="hljs-function"><span class="hljs-params">text</span> =&gt;</span> {
+                waitForTurn();
+            });
+        });
+
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Check if our enemy is close enough and we can shoot.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (enemyInRange()) {
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Shoot to location '</span> + enemy.x + <span class="hljs-string">' x '</span> + enemy.y + <span class="hljs-string">'.'</span>);
+
+        <span class="hljs-keyword">let</span> coords = {
+            <span class="hljs-attr">robot_id</span>: status.robot.robot_id,
+            <span class="hljs-attr">x</span>: enemy.x,
+            <span class="hljs-attr">y</span>: enemy.y
+        }        
+        fetch(baseUrl + <span class="hljs-string">'shoot?'</span> + querystring.stringify(coords)).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+            response.json().then(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> {
+                getStatusAndPlayTurn();
+            });
+        });        
+
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Move horizontally.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (enemy.x != status.robot.x) {
+
+        <span class="hljs-keyword">let</span> coords = {
+            <span class="hljs-attr">robot_id</span>: status.robot.robot_id,
+            <span class="hljs-attr">x</span>: status.robot.x,
+            <span class="hljs-attr">y</span>: status.robot.y
+        }
+        
+        <span class="hljs-keyword">if</span> (enemy.x &lt; status.robot.x) {
+            coords.x--;
+        } <span class="hljs-keyword">else</span> {
+            coords.x++;
+        }
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Move horizontally to location '</span> + coords.x + <span class="hljs-string">' x '</span> + coords.y + <span class="hljs-string">'.'</span>);
+
+        fetch(baseUrl + <span class="hljs-string">'move?'</span> + querystring.stringify(coords)).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+            response.json().then(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> {
+                getStatusAndPlayTurn();
+            });
+        });
+
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Move vertically.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Move vertically.'</span>);
+
+        <span class="hljs-keyword">let</span> coords = {
+            <span class="hljs-attr">robot_id</span>: status.robot.robot_id,
+            <span class="hljs-attr">x</span>: status.robot.x,
+            <span class="hljs-attr">y</span>: status.robot.y
+        }
+        
+        <span class="hljs-keyword">if</span> (enemy.y &lt; status.robot.y) {
+            coords.y--;
+        } <span class="hljs-keyword">else</span> {
+            coords.y++;
+        }
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Move horizontally to location '</span> + coords.x + <span class="hljs-string">' x '</span> + coords.y + <span class="hljs-string">'.'</span>);
+
+        fetch(baseUrl + <span class="hljs-string">'move?'</span> + querystring.stringify(coords)).then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+            response.json().then(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> {
+                getStatusAndPlayTurn();
+            });
+        });
+        
+    }
+ 
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Return true if enemy is in range.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">enemyInRange</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> enemy = status.enemies[<span class="hljs-number">0</span>];
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Math</span>.abs(enemy.x - status.robot.x) &lt;= status.robot.weapon_range 
+        &amp;&amp; <span class="hljs-built_in">Math</span>.abs(enemy.y - status.robot.y) &lt;= status.robot.weapon_range) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Now we have defined everything. It’s time to start the game!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>joinGame();</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

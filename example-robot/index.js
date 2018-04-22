@@ -1,28 +1,43 @@
-/**
- * Example robot for RESTFight game. This robot is super dummy. 
- * The idea is to show how to interact with the API.
- */
+// # Example RESTFight robot
+//
+// This is an example robot for RESTFight game:
+// https://github.com/jaamo/restfight
+// 
+// This example is very simple and it's made just to show how the game works.
+// 
+// The robot flow has these steps:
+// * Call `/join` to join the game.
+// * Poll `/status` until it's our turn.
+// * Play our turn.
+// * Call `/endturn` and jump to back to three.
+// 
+// The actual AI part (`playTurn` function) has the following logic:
+// * If out of ammo or out of moves, end turn
+// * If evemy robot in range, shoot
+// * Move towards enemy robot
+// 
+// But now let's move to the fun part!
 
+
+// Import some packages we need to make requests.
 const fetch = require('node-fetch');
 const querystring = require('querystring');
 
-// Base url. Point this to your server.
+// Base url pointing to our server.
 const baseUrl = 'http://127.0.0.1:8000/';
 
-// Robot id.
+// Robots id. This is set after joining the game.
 let robotId = 0;
 
-// Game status returned from the server.
+// Game status object returned from the server.
+// Check the model form API documentation:
+// https://app.swaggerhub.com/apis/jaamo/RESTFight/1.0.0
 let status = {};
 
-// Start everything!
-joinGame();
-
-/** 
- * Joins a game.
- */
+// This function joins the game.
 function joinGame() {
 
+    // I have added some console debugging here and there.
     console.log('Join game.');
 
     // Define our robot properties. Plese refer API docs & game rules for more information.
@@ -32,31 +47,35 @@ function joinGame() {
         weaponLevel: 0
     };
 
-    // Join the game. Robot is returned as a response. Save that for future use.
+    // Now it's time to make our first API call! We call `/join` endpoint with our parameters.
     fetch(baseUrl + 'join?' + querystring.stringify(params)).then(response => {
         response.json().then(json => { 
+
+            // Robot object is returned as a response.
+            // We save only the ID at this point for future usage.
             robotId = json.robot_id;
             console.log('Joined to game. Robot id is ' + robotId);
+
+            // Now we have joined the game and it's to to start waiting for our turn.
             waitForTurn();
+
         });
     });    
 
 }
 
-/** 
- * Poll status until the game is started.
- */
+ 
+// Now we just wait until it's our turn.
 function waitForTurn() {
 
     console.log('Wait for turn...');
 
-    // Request status. Remember to pass robot ID to get more meaningful response.
+    // Request game status. Remember to pass robot ID to get more meaningful response.
     fetch(baseUrl + 'status?' + querystring.stringify({robot_id: robotId})).then(response => {
         response.json().then(json => {
 
             // Check if it's your turn. If not, wait for 5 seconds and retry.
             if (json.is_your_turn == 1) {
-                console.log('It\'s our turn!')
                 getStatusAndPlayTurn();
             } else {
                 setTimeout(() => {
@@ -69,53 +88,50 @@ function waitForTurn() {
 
 }
 
-/** 
- * Update game status before playing turn.
- */
+// Our main AI has two functions. This first one loads the game status so that we have the latest
+// information for our decision making logic.
 function getStatusAndPlayTurn() {
 
     console.log('Get status.');
 
+    // Call status as we did above.
     fetch(baseUrl + 'status?' + querystring.stringify({robot_id: robotId})).then(response => {
         response.json().then(json => {
 
             // Save status.
             status = json;
-            // console.log(status);
 
-            // A little delay to make debugging easier.
-            setTimeout(() => {
-                playTurn();
-            }, 500);
+            // Now run the actual decision making function.
+            playTurn();
 
         });
     });    
 
 }
 
-/**
- * Play turn! This the place for magical AI code.
-*/
+// This function is the brains of the robot! Decisions are made here. 
+// This function sequentially calls itself until there's nothing to do and it's time to end turn.
 function playTurn() {
 
     console.log('Play turn.');
 
-    // No moves left or out of ammo => quit.
+    // Save enemy to it's own variable to keep the code cleaner.
+    let enemy = status.enemies[0];
+
+    // First we check if we are done.
+    // If we can't move anymore or we are out of ammo we end our turn.
     if (status.robot.moves == 0 || status.robot.weapon_ammo == 0) {
-        console.log('Out of moves: ' + status.robot.moves + '/' + status.robot.max_moves);
+
+        // Call end turn endpoint and then jump to waiting loop.
         fetch(baseUrl + 'endturn?' + querystring.stringify({robot_id: status.robot.robot_id})).then((response) => {
             response.text().then(text => {
                 waitForTurn();
             });
         });
-        return;
-    }
 
-    // Get enemy.
-    let enemy = status.enemies[0];
-
-    // If enemy is close enough, SHOOT!
-    if (enemyInRange()) {
+    } 
+    // Check if our enemy is close enough and we can shoot.
+    else if (enemyInRange()) {
 
         console.log('Shoot to location ' + enemy.x + ' x ' + enemy.y + '.');
 
@@ -184,9 +200,8 @@ function playTurn() {
  
 }
 
-/**
- * Return true if enemy is in range.
- */
+
+// Return true if enemy is in range.
 function enemyInRange() {
 
     let enemy = status.enemies[0];
@@ -199,3 +214,6 @@ function enemyInRange() {
     }
 
 }
+
+// Now we have defined everything. It's time to start the game!
+joinGame();
