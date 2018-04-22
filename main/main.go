@@ -187,7 +187,7 @@ func apiEndTurn(w http.ResponseWriter, r *http.Request) {
 
 	if restfight.CanPlay(robotIndex) {
 		restfight.ToggleTurn()
-		broadcastEvent(GameEvent{EventType: "NEW_TURN"})
+		broadcastEvent(GameEvent{EventType: "NEW_TURN", Status: restfight.GetStatus(robotIndex)})
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GameError{Error: "NOT_YOUR_TURN", Message: "Not your turn."})

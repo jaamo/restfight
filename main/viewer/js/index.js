@@ -626,9 +626,11 @@ var eventHandlers = {
 
   'STATUS': function STATUS(event) {
 
-    updateRobotsLegend(event.status.robots);
+    updateRobotsLegend(event.status.robots, event.status.active_robot);
 
     updateArena(event.status.arena);
+
+    updateRobots(event.status.robots);
 
     if (event.status.status == 2) {
       document.querySelector('.gameover').classList.add('gameover--visible');
@@ -647,8 +649,14 @@ var eventHandlers = {
   },
 
   'JOIN_GAME': function JOIN_GAME(event) {
-    var robot = new Robot(event.robot, arenaCellWidth);
-    robots[event.robot.robot_id] = robot;
+    // let robot = new Robot(event.robot, arenaCellWidth);
+    // robots[event.robot.robot_id] = robot;
+    // console.log(robots);
+  },
+
+  'NEW_TURN': function NEW_TURN(event) {
+
+    updateRobotsLegend(event.status.robots, event.status.active_robot);
   },
 
   'ROBOT_MOVED': function ROBOT_MOVED(event) {
@@ -709,13 +717,19 @@ function handleEvent(event) {
   }
 }
 
-function updateRobotsLegend(robots) {
+function updateRobotsLegend(robots, activeRobot) {
 
   if (!robots) {
     return;
   }
   robots.forEach(function (robot, i) {
-    document.querySelector('.js-robot' + i + '-title').innerHTML = 'robot' + i;
+
+    var active = '';
+    if (activeRobot == robot.robot_index) {
+      active = '*';
+    }
+
+    document.querySelector('.js-robot' + i + '-title').innerHTML = active + 'robot' + i;
     document.querySelector('.js-robot' + i + '-x').innerHTML = robot.x;
     document.querySelector('.js-robot' + i + '-y').innerHTML = robot.y;
     document.querySelector('.js-robot' + i + '-health').innerHTML = robot.health;
@@ -733,6 +747,30 @@ function updateArena(arena) {
         document.querySelector('div[data-x="' + cell.x + '"][data-y="' + cell.y + '"]').classList.add('cell--obstacle');
       }
     });
+  });
+}
+
+function updateRobots(robotsData) {
+
+  if (!robotsData) {
+    return;
+  }
+
+  // Update robot locations.
+  robotsData.forEach(function (robotData, i) {
+
+    // debugger;
+    // console.log(robots);
+
+    // Robot is missing. Add.
+    if (typeof robots[robotData.robot_id] == "undefined") {
+      // console.log('Robot ' + robotData.robot_id +' doesn\'t exists. Let\'s create one.');
+      var robot = new Robot(robotData, arenaCellWidth);
+      robots[robotData.robot_id] = robot;
+    } else {
+      robots[robotData.robot_id].x = robotData.x;
+      robots[robotData.robot_id].y = robotData.y;
+    }
   });
 }
 
