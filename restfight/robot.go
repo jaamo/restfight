@@ -169,7 +169,7 @@ func GetRobotIndexByID(robotID int) (int, error) {
 		}
 	}
 
-	return 0, errors.New("ROBOT_NOT_FOUND")
+	return -1, errors.New("ROBOT_NOT_FOUND")
 }
 
 // Shoot fires the weapon and shoots to given position.

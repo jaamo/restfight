@@ -28,6 +28,7 @@ func NewGame() {
 
 	// Reset turn.
 	status.ActiveRobot = 0
+	status.IsYourTurn = 0
 
 	// Clear all players.
 	robots = robots[:0]
@@ -112,6 +113,7 @@ func GetStatus(robotIndex int) Status {
 
 	status.Robot = nil
 	status.Enemies = nil
+	status.IsYourTurn = 0
 
 	// No robot defined so skip the rest.
 	if robotIndex < 0 {
@@ -120,13 +122,19 @@ func GetStatus(robotIndex int) Status {
 
 	// Get players robot.
 	if len(robots) > 0 && robotIndex < len(robots) {
+
 		status.Robot = robots[robotIndex]
+
+		if status.Status == GameStatusRunning && robotIndex == status.ActiveRobot {
+			status.IsYourTurn = 1
+		}
+
 	}
 
 	// Add enemy robot to list.
 	if len(robots) > 1 {
 		var enemies []*Robot
-		enemies = append(enemies, robots[(robotIndex+1%2)])
+		enemies = append(enemies, robots[((robotIndex+1)%2)])
 		status.Enemies = enemies
 	}
 
