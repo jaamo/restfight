@@ -20,3 +20,6 @@ var arena [ArenaSize][ArenaSize]Cell
 
 // Robots
 var robots []*Robot
+
+// Timestamp when the game ended.
+var gameOverTime int64

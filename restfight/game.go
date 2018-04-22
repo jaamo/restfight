@@ -2,7 +2,9 @@ package restfight
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
+	"time"
 )
 
 // NewGame starts new game.
@@ -115,6 +117,15 @@ func GetStatus(robotIndex int) Status {
 	status.Enemies = nil
 	status.IsYourTurn = 0
 
+	// Start new game if coundown is zero.
+	if status.Status == GameStatusGameOver {
+		gameOverDuration := time.Now().Unix() - gameOverTime
+		fmt.Printf("Game over duration: %d / 10 seconds.\n", gameOverDuration)
+		if gameOverDuration > 10 {
+			NewGame()
+		}
+	}
+
 	// No robot defined so skip the rest.
 	if robotIndex < 0 {
 		return status
@@ -147,6 +158,7 @@ func updateStatus() {
 	for i := 0; i < len(robots); i++ {
 		if robots[i].Health <= 0 {
 			status.Status = GameStatusGameOver
+			gameOverTime = time.Now().Unix()
 		}
 	}
 
