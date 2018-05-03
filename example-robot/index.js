@@ -24,7 +24,7 @@ const fetch = require('node-fetch');
 const querystring = require('querystring');
 
 // Base url pointing to our server.
-const baseUrl = 'http://restfight.mrjaamo.com:8000/';
+const baseUrl = 'http://127.0.0.1:8000/';
 
 // Robots id. This is set after joining the game.
 let robotId = 0;
@@ -135,6 +135,7 @@ function playTurn() {
 
         console.log('Shoot to location ' + enemy.x + ' x ' + enemy.y + '.');
 
+        // Shoot enemy.
         let coords = {
             robot_id: status.robot.robot_id,
             x: enemy.x,
