@@ -11,6 +11,7 @@ Robots can move around and shoot their opponents. There are also obstacles on th
 
 ## Documentation
 
+* [Tutorial: Playing your first game](docs/starting-the-server.md)
 * [Game rules](game-rules.md)
 * [API documentation (swagger.io)](https://app.swaggerhub.com/apis/jaamo/RESTFight/1.0.0)
 * [Node based example robot](example-robot/README.md)
@@ -19,6 +20,11 @@ Robots can move around and shoot their opponents. There are also obstacles on th
 
 * [Game module documentation](restfight/README.md)
 * [Web server documentation](main/README.md)
+
+## Test server
+
+You can test your robots on a test server:  
+[restfight.mrjaamo.com:8000](restfight.mrjaamo.com:8000)
 
 ## Author
 
