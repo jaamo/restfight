@@ -27,6 +27,13 @@ Robots can move around and shoot their opponents. There are also obstacles on th
 You can test your robots on a test server:  
 [restfight.mrjaamo.com:8000](restfight.mrjaamo.com:8000)
 
+Viewer:
+[http://restfight.mrjaamo.com:8000/viewer/](http://restfight.mrjaamo.com:8000/viewer/)
+
+Test remote controller:
+[http://restfight.mrjaamo.com:8000/viewer/remote.html](http://restfight.mrjaamo.com:8000/viewer/remote.html)
+
+
 ## Author
 
 * Jaakko Alajoki, https://twitter.com/mrjaamo

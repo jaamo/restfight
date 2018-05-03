@@ -6,4 +6,4 @@ Build the image:
 `docker build . --tag restfight`
 
 Run the image:  
-`docker run -d -p 8000:8000 restfight`
+`docker run -d -p 8000:8000 --name restfight restfight`
