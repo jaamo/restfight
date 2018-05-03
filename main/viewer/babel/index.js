@@ -139,7 +139,7 @@ function initGame() {
 
 function initWebSocket() {
 
-  let socket = new WebSocket("ws://127.0.0.1:8000/socket");  
+  let socket = new WebSocket("ws://" + window.location.host + "/socket");  
   
   socket.onopen = function (event) {
     log('Connection to server opened.');
