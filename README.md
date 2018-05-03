@@ -12,6 +12,7 @@ Robots can move around and shoot their opponents. There are also obstacles on th
 ## Documentation
 
 * [Tutorial: Playing your first game](docs/starting-the-server.md)
+* [Tutorial: Running docker server](docs/starting-docker-server.md)
 * [Game rules](game-rules.md)
 * [API documentation (swagger.io)](https://app.swaggerhub.com/apis/jaamo/RESTFight/1.0.0)
 * [Node based example robot](example-robot/README.md)
