@@ -92,6 +92,11 @@ func ToggleTurn() {
 	// Swap turn.
 	status.ActiveRobot = (status.ActiveRobot + 1) % 2
 
+	// Regeneration. Add health to an active robot.
+	if robots[status.ActiveRobot].Health < robots[status.ActiveRobot].MaxHealth {
+		robots[status.ActiveRobot].Health++
+	}
+
 	// Reset ammo and moves.
 	for i := 0; i < len(robots); i++ {
 		robots[i].WeaponAmmo = 1

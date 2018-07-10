@@ -49,6 +49,14 @@ func TestToggleTurn(t *testing.T) {
 		t.Errorf("3rd turn. Turn should be 0.")
 	}
 
+	// Regeneration
+	robots[0].Health = 5
+	robots[1].Health = 1
+	ToggleTurn()
+	if robots[0].Health != 5 || robots[1].Health != 2 {
+		t.Errorf("Regeneration failed. Robot 0 health was supposed to be 5 (was %d) and robot 2 to be 2 (was %d).", robots[0].Health, robots[1].Health)
+	}
+
 }
 
 func TestNewGameArenaSize(t *testing.T) {
