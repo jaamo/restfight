@@ -37,9 +37,6 @@ func NewGame() {
 	robots = robots[:0]
 	powerups = powerups[:0]
 
-	// DEBUG
-	PowerupRandomizer(true)
-
 }
 
 // JoinGame add a new robot with specified info to the arena and return it. Return an error if game is full.
@@ -111,10 +108,10 @@ func ToggleTurn() {
 	// When beginning of a new round consume powerups and randomly add new poweups.
 	if status.ActiveRobot == 0 {
 		fmt.Println("Add powerup!")
-		PowerupRandomizer(true)
+		PowerupRandomizer(false)
 		ConsumeArenaPowerups()
 		ConsumeRobotPowerups()
-		fmt.Printf("%v", powerups)
+		// fmt.Printf("%v", powerups)
 	}
 
 }
