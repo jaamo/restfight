@@ -21,5 +21,8 @@ var arena [ArenaSize][ArenaSize]Cell
 // Robots
 var robots []*Robot
 
+// Powerups
+var powerups []*Powerup
+
 // Timestamp when the game ended.
 var gameOverTime int64
