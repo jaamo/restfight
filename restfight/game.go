@@ -26,6 +26,7 @@ func NewGame() {
 		ActiveRobot: 0,
 		Arena:       &arena,
 		Robots:      &robots,
+		Powerups:    &powerups,
 	}
 
 	// Reset turn.
@@ -34,6 +35,10 @@ func NewGame() {
 
 	// Clear all players.
 	robots = robots[:0]
+	powerups = powerups[:0]
+
+	// DEBUG
+	PowerupRandomizer(true)
 
 }
 
@@ -101,6 +106,15 @@ func ToggleTurn() {
 	for i := 0; i < len(robots); i++ {
 		robots[i].WeaponAmmo = 1
 		robots[i].Moves = robots[i].MaxMoves
+	}
+
+	// When beginning of a new round consume powerups and randomly add new poweups.
+	if status.ActiveRobot == 0 {
+		fmt.Println("Add powerup!")
+		PowerupRandomizer(true)
+		ConsumeArenaPowerups()
+		ConsumeRobotPowerups()
+		fmt.Printf("%v", powerups)
 	}
 
 }

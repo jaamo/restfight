@@ -1,6 +1,8 @@
 package restfight
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCreatePowerup(t *testing.T) {
 
@@ -173,6 +175,21 @@ func TestPowerupApply(t *testing.T) {
 
 	if robots[0].Powerup == nil {
 		t.Errorf("Powerup not added to a robot.")
+	}
+
+}
+
+func TestRandomizer(t *testing.T) {
+
+	NewGame()
+	JoinGame(1, 1, 0)
+	JoinGame(1, 1, 0)
+
+	// Force add
+	PowerupRandomizer(true)
+
+	if len(powerups) != 1 {
+		t.Errorf("Powerup should have been added.")
 	}
 
 }

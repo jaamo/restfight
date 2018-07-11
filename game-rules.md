@@ -44,6 +44,8 @@ Engine, shields and weapon level has their own "weight" and players need to cons
 
 Robot has health. When health goes to zero robot is destroyed. Initial health depends on shield level.
 
+Robot regenerates by the time. If health is below maximum +1 health is added in the beginning of each turn. 
+
 ### Engine
 
 Engine moves the robot around.
@@ -82,3 +84,13 @@ Weapon is used to shoot other players. Range defines how far a robot can shoot. 
 | Level 1       | 2             | 2                 | 2              |
 | Level 2       | 4             | 4                 | 4              |
 | Level 3       | 6             | 6                 | 6              |
+
+### Power ups
+
+Power ups randomly appears to the arena. When a player reaches a power up it's applied to the player and removed from the arena. Some power ups are enabled only for limited amount of turns and then they are disabled. Power ups are visibile for 5 turns and then they disappear. 
+
+| Power up              | Function                        | Turns |
+| --------------------- |-------------------------------- |-------|
+| Health                | Return health to max            | -     |
+| Increased speed       | Increase speed by 5             | 3     |
+| Improved weapon       | Invrease weapon by 4            | 3     |

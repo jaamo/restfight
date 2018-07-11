@@ -9,6 +9,7 @@ $color-explosion: rgb(252, 0, 0);
 $color-robot: #C5A639;
 $color-white: #fff;
 $color-almost-white: rgb(189, 189, 189);
+$color-powerup: #4d9e4d;
 
 body {
   background: $color-background;
@@ -63,12 +64,18 @@ body {
   }  
 }
 
-.robot {
+.robot, .powerup {
   position: absolute;  
   width: $cell-size - 12px;
   height: $cell-size - 12px;
   margin: 6px;
   background: $color-robot;
+}
+
+.powerup {
+  background: $color-powerup;
+  text-align: center;
+  line-height: $cell-size - 12px;
 }
 
 .console {

@@ -71,6 +71,8 @@ let eventHandlers = {
 
     updateRobots(event.status.robots);
 
+    updatePowerups(event.status.powerups);
+
     if (event.status.status == 2) {
       document.querySelector('.gameover').classList.add('gameover--visible');
     } else {
@@ -182,6 +184,13 @@ function updateRobotsLegend(robots, activeRobot) {
     document.querySelector('.js-robot'+i+'-max-moves').innerHTML = robot.max_moves;
     document.querySelector('.js-robot'+i+'-weapon-range').innerHTML = robot.weapon_range;
     document.querySelector('.js-robot'+i+'-weapon-power').innerHTML = robot.weapon_power;
+
+    if (robot.powerup) {
+      document.querySelector('.js-robot'+i+'-powerup').innerHTML = robot.powerup.type;
+    } else {
+      document.querySelector('.js-robot'+i+'-powerup').innerHTML = '';
+    }
+
   })
 
 }
@@ -220,10 +229,59 @@ function updateRobots(robotsData) {
 
   })
 
-
-
 }
 
+
+function updatePowerups(powerups) {
+
+  // debugger;
+
+  if (!powerups) {
+    return;
+  }
+
+  console.log(powerups);
+
+  // Clean powerups.
+  let powerupElements = document.querySelectorAll('.powerup');
+  for (let i = 0; i < powerupElements.length; i++) {
+    powerupElements[i].remove();
+  }
+
+  // Add powerups.
+  powerups.forEach((powerup, i) => {
+
+    let el = document.createElement('div');
+    el.classList.add('powerup');
+    el.dataset.x = powerup.x;
+    el.dataset.y = powerup.y;
+    el.dataset.type = powerup.type;
+
+    el.style.left = powerup.x * arenaCellWidth + 'px';
+    el.style.top = powerup.y * arenaCellWidth + 'px';
+
+    const labels = {
+      'POWERUP_SPEED': 'S'
+    }
+
+    el.innerHTML = labels[powerup.type]
+
+
+    document.querySelector('.arena').appendChild(el);
+
+    // Robot is missing. Add.
+    // if (typeof(robots[robotData.robot_id]) == "undefined") {
+    //   // console.log('Robot ' + robotData.robot_id +' doesn\'t exists. Let\'s create one.');
+    //   let robot = new Robot(robotData, arenaCellWidth);
+    //   robots[robotData.robot_id] = robot; 
+    // } else {
+    //   robots[robotData.robot_id].x = robotData.x
+    //   robots[robotData.robot_id].y = robotData.y  
+    // }
+
+  })
+
+}
 function log(msg) {
 
   console.log(msg);

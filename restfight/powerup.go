@@ -1,16 +1,17 @@
 package restfight
 
 import (
+	"fmt"
 	"math/rand"
 )
 
 // PowerupRandomizer creates new powerups to the map. Call this on each turn.
-func PowerupRandomizer() {
+func PowerupRandomizer(forceAdd bool) {
 
 	rand.Seed(42)
-	if rand.Intn(10) == 0 {
+	if forceAdd || rand.Intn(10) == 0 {
 
-		var powerupTypeInt = rand.Intn(2)
+		var powerupTypeInt = 0 // rand.Intn(2)
 
 		// Find all empty cells.
 		var emptyCells []*Cell
@@ -24,6 +25,7 @@ func PowerupRandomizer() {
 
 		// Abort of the map is empty for some reason.
 		if len(emptyCells) == 0 {
+			fmt.Println("WFT?! No empty cells found.")
 			return
 		}
 

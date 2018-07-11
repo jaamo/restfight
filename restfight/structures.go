@@ -67,7 +67,7 @@ type Status struct {
 	Robots *[]*Robot `json:"robots"`
 
 	// All powerups
-	Powerups *[]*Powerup `json:"poweups"`
+	Powerups *[]*Powerup `json:"powerups"`
 
 	Arena *[ArenaSize][ArenaSize]Cell `json:"arena"`
 }

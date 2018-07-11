@@ -45,12 +45,17 @@ body {
       margin: 1px;
       opacity: 0; }
 
-.robot {
+.robot, .powerup {
   position: absolute;
   width: 28px;
   height: 28px;
   margin: 6px;
   background: #C5A639; }
+
+.powerup {
+  background: #4d9e4d;
+  text-align: center;
+  line-height: 28px; }
 
 .console {
   margin-left: 20px; }

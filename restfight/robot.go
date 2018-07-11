@@ -156,6 +156,9 @@ func MoveRobot(robotIndex int, x int, y int) (*Robot, error) {
 	// Move.
 	forceMoveRobot(robot, x, y)
 
+	// Check if we found a power up!
+	DeployPowerupsFromArenaToRobots()
+
 	return robot, nil
 
 }
