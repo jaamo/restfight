@@ -107,7 +107,7 @@ func ToggleTurn() {
 
 	// When beginning of a new round consume powerups and randomly add new poweups.
 	if status.ActiveRobot == 0 {
-		fmt.Println("Add powerup!")
+		fmt.Println("Add powerup?")
 		PowerupRandomizer(false)
 		ConsumeArenaPowerups()
 		ConsumeRobotPowerups()

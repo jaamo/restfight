@@ -9,7 +9,9 @@ import (
 func PowerupRandomizer(forceAdd bool) {
 
 	rand.Seed(42)
-	if forceAdd || rand.Intn(10) == 0 {
+	if forceAdd || rand.Intn(5) == 0 {
+
+		fmt.Println("Add powerup!")
 
 		var powerupTypeInt = 0 // rand.Intn(2)
 
@@ -39,6 +41,8 @@ func PowerupRandomizer(forceAdd bool) {
 
 		CreatePowerupAndAddToArena(powerupType, randomCell.X, randomCell.Y)
 
+	} else {
+		fmt.Println("Not now...")
 	}
 }
 

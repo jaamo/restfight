@@ -30,6 +30,8 @@ func apiGetStatus(w http.ResponseWriter, r *http.Request) {
 	}
 
 	broadcastEvent(GameEvent{EventType: "STATUS", Status: restfight.GetStatus(-1)})
+
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(restfight.GetStatus(robotIndex))
 
 }
