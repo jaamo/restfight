@@ -1,0 +1,23 @@
+.controls {
+    &__move-row1 {
+        text-align: center;
+        padding: 0.5rem 0;
+    }
+    &__move-row2 {
+        text-align: center;
+        padding: 0.5rem 0;
+        .btn {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+            &:first-child {
+                margin: 0rem;
+            }
+            &:last-child {
+                margin: 0rem;
+            }
+        }
+    }
+    .btn {
+        width: 8rem;
+    }
+}

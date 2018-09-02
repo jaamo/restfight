@@ -1,0 +1,22 @@
+@import '../scss/base';
+
+.alert {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    background: $color-highlight1;
+    color: $color-background;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 2rem;
+    &__close {
+        position: absolute;
+        top: 0;
+        right: 0.4rem;
+        font-size: 2rem;
+        color: $color-grey;
+        transform: rotate(45deg);
+        transform-origin: center center;
+    }
+}
