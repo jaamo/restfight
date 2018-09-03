@@ -2,10 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Remote from './containers/Remote.js';
 import "./index.scss"
-// https://blog.tylerbuchea.com/super-simple-react-redux-application-example/
+
+import { Provider } from 'react-redux';
+import { store } from './store/store.js';
 
 ReactDOM.render(
-  <Remote></Remote>,
+  <Provider store={store}>
+    <Remote></Remote>
+  </Provider>,
   document.getElementById('app')
 );
 

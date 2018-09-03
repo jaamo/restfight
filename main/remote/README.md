@@ -3,6 +3,10 @@
 Base on project:
 https://github.com/rwieruch/minimal-react-webpack-babel-setup
 
+And this:
+https://blog.tylerbuchea.com/super-simple-react-redux-application-example/
+
+
 ## Features
 
 * React 16
